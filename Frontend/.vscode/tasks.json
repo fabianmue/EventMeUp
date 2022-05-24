@@ -6,21 +6,21 @@
       "type": "npm",
       "script": "lint",
       "problemMatcher": [],
-      "label": "npm: lint",
+      "label": "Lint",
       "detail": "ng lint"
     },
     {
       "type": "npm",
       "script": "codestyle:check",
       "problemMatcher": [],
-      "label": "npm: codestyle:check",
+      "label": "Check code style",
       "detail": "npx prettier --check ."
     },
     {
       "type": "npm",
       "script": "codestyle:fix",
       "problemMatcher": [],
-      "label": "npm: codestyle:fix",
+      "label": "Fix code style",
       "detail": "npx prettier --write ."
     },
     {
