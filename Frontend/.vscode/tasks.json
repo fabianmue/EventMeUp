@@ -4,39 +4,24 @@
   "tasks": [
     {
       "type": "npm",
-      "script": "start",
-      "isBackground": true,
-      "problemMatcher": {
-        "owner": "typescript",
-        "pattern": "$tsc",
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": {
-            "regexp": "(.*?)"
-          },
-          "endsPattern": {
-            "regexp": "bundle generation complete"
-          }
-        }
-      }
+      "script": "lint",
+      "problemMatcher": [],
+      "label": "npm: lint",
+      "detail": "ng lint"
     },
     {
       "type": "npm",
-      "script": "test",
-      "isBackground": true,
-      "problemMatcher": {
-        "owner": "typescript",
-        "pattern": "$tsc",
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": {
-            "regexp": "(.*?)"
-          },
-          "endsPattern": {
-            "regexp": "bundle generation complete"
-          }
-        }
-      }
+      "script": "codestyle:check",
+      "problemMatcher": [],
+      "label": "npm: codestyle:check",
+      "detail": "npx prettier --check ."
+    },
+    {
+      "type": "npm",
+      "script": "codestyle:fix",
+      "problemMatcher": [],
+      "label": "npm: codestyle:fix",
+      "detail": "npx prettier --write ."
     }
   ]
 }
