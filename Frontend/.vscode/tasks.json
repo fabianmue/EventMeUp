@@ -25,10 +25,10 @@
     },
     {
       "type": "shell",
-      "command": "docker build -t fabianmue/squashmeup_frontend:latest .",
+      "command": "docker build -t fabianmue/eventmeup_frontend:latest .",
       "problemMatcher": [],
       "label": "Build container",
-      "detail": "docker build -t fabianmue/squashmeup_frontend:latest ."
+      "detail": "docker build -t fabianmue/eventmeup_frontend:latest ."
     }
   ]
 }
