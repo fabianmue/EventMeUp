@@ -1,0 +1,30 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch webapi - local",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "Build webapi",
+      "program": "${workspaceFolder}/Webapi/bin/Debug/net6.0/Webapi.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/Webapi",
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Local"
+      },
+      "envFile": "${workspaceFolder}/webapi.env",
+      "sourceFileMap": {
+        "/Views": "${workspaceFolder}/Webapi/Views"
+      }
+    },
+    {
+      "name": ".NET Core Attach",
+      "type": "coreclr",
+      "request": "attach"
+    }
+  ]
+}
