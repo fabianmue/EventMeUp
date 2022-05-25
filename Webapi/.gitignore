@@ -1,3 +1,6 @@
 # Build output
-/obj
-/bin
+Webapi/obj
+Webapi/bin
+
+# Environment
+*.env
