@@ -27,7 +27,7 @@
       "type": "shell",
       "command": "docker build -t fabianmue/eventmeup_frontend:latest .",
       "problemMatcher": [],
-      "label": "Build container",
+      "label": "Build container image",
       "detail": "docker build -t fabianmue/eventmeup_frontend:latest ."
     }
   ]
