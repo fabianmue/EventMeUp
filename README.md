@@ -33,3 +33,5 @@ A simple web application to create, organise and share events with your friends!
 > As a user, I want to be able to suggest an alternative date or location for an existing event.
 
 > As a logged in user, I want to be able to hide the participants for events I created.
+
+> As a user, I want to be able to select the language for the application. I want to be able to choose from English, German and Swiss German.
