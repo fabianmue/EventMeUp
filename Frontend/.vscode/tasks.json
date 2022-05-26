@@ -6,7 +6,7 @@
       "type": "npm",
       "script": "lint",
       "problemMatcher": [],
-      "label": "Lint",
+      "label": "Check code quality",
       "detail": "ng lint"
     },
     {
@@ -29,6 +29,13 @@
       "problemMatcher": [],
       "label": "Build container image",
       "detail": "docker build -t fabianmue/eventmeup_frontend:latest ."
+    },
+    {
+      "type": "npm",
+      "script": "generate:api-services",
+      "problemMatcher": [],
+      "label": "Generate api services",
+      "detail": "ng-openapi-gen"
     }
   ]
 }
