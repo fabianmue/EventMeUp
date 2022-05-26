@@ -1,11 +1,15 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using shortid;
+using shortid.Configuration;
 
 namespace Webapi.Models.Events;
 
 public class Event
 {
-  [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-  public string Id { get; set; } = default!;
+  [Key]
+  [DatabaseGenerated(DatabaseGeneratedOption.None)]
+  public string Id { get; set; }
 
   public string Title { get; set; }
 
@@ -21,11 +25,16 @@ public class Event
 
   public Event()
   {
+    this.Id = ShortId.Generate(ShortIdOptions);
     this.Title = default!;
   }
 
   public Event(string title)
   {
+    this.Id = ShortId.Generate(ShortIdOptions);
     this.Title = title;
   }
+
+  private static readonly GenerationOptions ShortIdOptions =
+    new(useNumbers: true, useSpecialCharacters: false, length: 10);
 }
