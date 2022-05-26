@@ -9,6 +9,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
+    "packages:check-outdated": "npm outdated",
+    "packages:check-vulnerabilities": "npm audit",
     "codestyle:check": "npx prettier --check .",
     "codestyle:fix": "npx prettier --write .",
     "generate:api-services": "ng-openapi-gen"

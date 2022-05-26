@@ -32,6 +32,20 @@
     },
     {
       "type": "npm",
+      "script": "packages:check-outdated",
+      "problemMatcher": [],
+      "label": "Check packages outdated",
+      "detail": "npm outdated"
+    },
+    {
+      "type": "npm",
+      "script": "packages:check-vulnerabilities",
+      "problemMatcher": [],
+      "label": "Check packages vulnerabilities",
+      "detail": "npm audit"
+    },
+    {
+      "type": "npm",
       "script": "generate:api-services",
       "problemMatcher": [],
       "label": "Generate api services",
