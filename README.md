@@ -20,6 +20,8 @@ A simple web application to create, organise and share events with your friends!
 
 > As a user, I want to be able to download an export of an event which I can import into a calendar.
 
+> As a logged in user, I want to able to create a series of recurring events.
+
 > As a user, I want to be able to see a list of events from a certain organiser.
 
 > As a logged in user, I want to be able to set a deadline for signups to events I created.
