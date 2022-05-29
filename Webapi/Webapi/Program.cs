@@ -104,17 +104,16 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
+  if (app.Environment.IsEnvironment("Local"))
+  {
+    scope.ServiceProvider.DeleteDatabase();
+  }
+
   scope.ServiceProvider.MigrateDatabase();
 
   if (app.Environment.IsEnvironment("Local"))
   {
-    scope.ServiceProvider.SeedIdentity();
-  }
-
-  if (app.Environment.IsEnvironment("Local"))
-  {
-    scope.ServiceProvider.ClearData();
-    scope.ServiceProvider.SeedData();
+    scope.ServiceProvider.Seed();
   }
 }
 
