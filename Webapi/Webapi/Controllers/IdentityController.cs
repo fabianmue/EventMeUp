@@ -37,9 +37,9 @@ public class IdentityController : ControllerBase
   [HttpPost("login")]
   [Consumes(MediaTypeNames.Application.Json)]
   [Produces(MediaTypeNames.Application.Json)]
-  [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserLoginResponseDto))]
-  [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(IActionResult))]
-  public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
+  [ProducesResponseType(StatusCodes.Status200OK)]
+  [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+  public async Task<ActionResult<UserLoginResponseDto>> Login([FromBody] UserLoginDto userLoginDto)
   {
     if (userLoginDto == null || !ModelState.IsValid)
     {
@@ -71,7 +71,7 @@ public class IdentityController : ControllerBase
   [Produces(MediaTypeNames.Application.Json)]
   [ProducesResponseType(StatusCodes.Status201Created)]
   [ProducesResponseType(StatusCodes.Status400BadRequest)]
-  [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserRegisterResponseDto))]
+  [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(UserRegisterResponseDto))]
   public async Task<IActionResult> Register([FromBody] UserRegisterDto userRegisterDto)
   {
     if (userRegisterDto == null || !ModelState.IsValid)

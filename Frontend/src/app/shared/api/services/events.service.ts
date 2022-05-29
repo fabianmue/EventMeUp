@@ -34,7 +34,7 @@ export class EventsService extends BaseService {
    * This method doesn't expect any request body.
    */
   eventsGetAllEvents$Response(params?: {
-  }): Observable<StrictHttpResponse<EventDto>> {
+  }): Observable<StrictHttpResponse<Array<EventDto>>> {
 
     const rb = new RequestBuilder(this.rootUrl, EventsService.EventsGetAllEventsPath, 'get');
     if (params) {
@@ -46,7 +46,7 @@ export class EventsService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<EventDto>;
+        return r as StrictHttpResponse<Array<EventDto>>;
       })
     );
   }
@@ -58,10 +58,10 @@ export class EventsService extends BaseService {
    * This method doesn't expect any request body.
    */
   eventsGetAllEvents(params?: {
-  }): Observable<EventDto> {
+  }): Observable<Array<EventDto>> {
 
     return this.eventsGetAllEvents$Response(params).pipe(
-      map((r: StrictHttpResponse<EventDto>) => r.body as EventDto)
+      map((r: StrictHttpResponse<Array<EventDto>>) => r.body as Array<EventDto>)
     );
   }
 

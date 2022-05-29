@@ -37,7 +37,7 @@ public class EventsController : ControllerBase
 
   [HttpGet]
   [Produces(MediaTypeNames.Application.Json)]
-  [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EventDto))]
+  [ProducesResponseType(StatusCodes.Status200OK)]
   [ProducesResponseType(StatusCodes.Status404NotFound)]
   public async Task<ActionResult<IList<EventDto>>> GetAllEvents()
   {
@@ -54,7 +54,7 @@ public class EventsController : ControllerBase
 
   [HttpGet("{id}")]
   [Produces(MediaTypeNames.Application.Json)]
-  [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EventDto))]
+  [ProducesResponseType(StatusCodes.Status200OK)]
   [ProducesResponseType(StatusCodes.Status404NotFound)]
   public async Task<ActionResult<EventDto>> GetEvent(string id)
   {
