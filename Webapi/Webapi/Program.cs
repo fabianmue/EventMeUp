@@ -108,13 +108,13 @@ using (var scope = app.Services.CreateScope())
 
   if (app.Environment.IsEnvironment("Local"))
   {
-    scope.ServiceProvider.ClearData();
-    scope.ServiceProvider.SeedData();
+    scope.ServiceProvider.SeedIdentity();
   }
 
   if (app.Environment.IsEnvironment("Local"))
   {
-    scope.ServiceProvider.SeedIdentity();
+    scope.ServiceProvider.ClearData();
+    scope.ServiceProvider.SeedData();
   }
 }
 

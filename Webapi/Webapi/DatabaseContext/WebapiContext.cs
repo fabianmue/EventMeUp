@@ -25,5 +25,8 @@ public class WebapiContext : IdentityDbContext<WebapiUser>
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
     base.OnModelCreating(modelBuilder);
+    modelBuilder.Entity<Event>()
+      .Property(ev => ev.CreatedAt)
+      .HasDefaultValueSql("now()");
   }
 }

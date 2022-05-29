@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using shortid;
 using shortid.Configuration;
+using Webapi.Models.Identity;
 
 namespace Webapi.Models.Events;
 
@@ -13,13 +14,17 @@ public class Event
 
   public string Title { get; set; }
 
+  public DateTime CreatedAt { get; set; }
+
+  public IList<WebapiUser> Owners { get; set; } = new List<WebapiUser>();
+
   public string? Description { get; set; }
 
   public DateTime Start { get; set; }
 
   public DateTime? End { get; set; }
 
-  public string? Where { get; set; }
+  public string? Location { get; set; }
 
   public string? Notes { get; set; }
 
