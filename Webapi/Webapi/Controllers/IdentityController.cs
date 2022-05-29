@@ -58,7 +58,7 @@ public class IdentityController : ControllerBase
       return Unauthorized();
     }
 
-    var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.UserName) };
+    var claims = new List<Claim> { new Claim(ClaimTypes.Email, user.Email) };
     var token = GetJwtSecurityToken(claims);
     return Ok(new UserLoginResponseDto
     {

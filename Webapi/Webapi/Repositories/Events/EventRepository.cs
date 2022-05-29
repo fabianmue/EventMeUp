@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Webapi.DatabaseContext;
 using Webapi.Models.Events;
+using Webapi.Models.Identity;
 
 namespace Webapi.Repositories.Events;
 
@@ -16,9 +17,9 @@ public class EventRepository : IEventRepository
     this._dbSet = this._context.Set<Event>();
   }
 
-  public async Task<IList<Event>> GetAllEventsAsync()
+  public async Task<IList<Event>> GetAllEventsByOwnerAsync(WebapiUser owner)
   {
-    return await this._dbSet.ToListAsync();
+    return await this._dbSet.Where(ev => ev.Owners.Contains(owner)).ToListAsync();
   }
 
   public async Task<Event?> GetEventAsync(string id)

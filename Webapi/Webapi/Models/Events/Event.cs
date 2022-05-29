@@ -34,10 +34,16 @@ public class Event
     this.Title = default!;
   }
 
-  public Event(string title)
+  public Event(EventDto eventDto, WebapiUser user)
   {
     this.Id = ShortId.Generate(ShortIdOptions);
-    this.Title = title;
+    this.Title = eventDto.Title;
+    this.Owners = new List<WebapiUser> { user };
+    this.Description = eventDto.Description;
+    this.Start = eventDto.Start;
+    this.End = eventDto.End;
+    this.Location = eventDto.Location;
+    this.Notes = eventDto.Notes;
   }
 
   private static readonly GenerationOptions ShortIdOptions =
