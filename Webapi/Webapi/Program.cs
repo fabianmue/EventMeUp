@@ -1,11 +1,16 @@
 using System.Reflection;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Webapi.DatabaseContext;
-using Webapi.DatabaseContext.WebapiContextExtensions;
+using Webapi.Models.Identity;
 using Webapi.Repositories.Events;
+using Webapi.ServiceProviderExtensions;
 
 var allowCorsLocalhost = "allowCorsLocalhost";
 
@@ -18,6 +23,36 @@ builder.Services.AddDbContext<WebapiContext>(options =>
   string connectionString = builder.Configuration.GetValue<string>("WEBAPI_CONNECTIONSTRING");
   options.UseNpgsql(connectionString);
 });
+builder.Services
+  .AddIdentity<WebapiUser, IdentityRole>(options =>
+  {
+    options.User.RequireUniqueEmail = true;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 8;
+  })
+  .AddEntityFrameworkStores<WebapiContext>()
+  .AddDefaultTokenProviders();
+builder.Services
+  .AddAuthentication(options =>
+  {
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+  })
+  .AddJwtBearer(options =>
+  {
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+      ValidateIssuer = true,
+      ValidateAudience = true,
+      ValidAudience = builder.Configuration["JWT:ValidAudience"],
+      ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+      IssuerSigningKey = new SymmetricSecurityKey(
+        Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+    };
+  });
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(configuration =>
@@ -33,6 +68,23 @@ builder.Services.AddSwaggerGen(configuration =>
       Name = "fabianmue"
     }
   });
+  var securityScheme = new OpenApiSecurityScheme
+  {
+    Name = "Authorization",
+    BearerFormat = "JWT",
+    Scheme = "Bearer",
+    Description = "Enter the token.",
+    In = ParameterLocation.Header,
+    Type = SecuritySchemeType.Http,
+    Reference = new OpenApiReference
+    {
+      Type = ReferenceType.SecurityScheme,
+      Id = "Bearer"
+    }
+  };
+  configuration.AddSecurityDefinition("Bearer", securityScheme);
+  configuration.AddSecurityRequirement(
+    new OpenApiSecurityRequirement { { securityScheme, Array.Empty<string>() } });
   configuration.IncludeXmlComments(Path.Combine(
     AppContext.BaseDirectory,
     $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"
@@ -52,17 +104,17 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-  var context = scope.ServiceProvider.GetRequiredService<WebapiContext>();
-  context.Database.Migrate();
+  scope.ServiceProvider.MigrateDatabase();
 
   if (app.Environment.IsEnvironment("Local"))
   {
-    context.ClearAllDbSets();
+    scope.ServiceProvider.ClearData();
+    scope.ServiceProvider.SeedData();
   }
 
   if (app.Environment.IsEnvironment("Local"))
   {
-    context.Seed();
+    scope.ServiceProvider.SeedIdentity();
   }
 }
 
@@ -75,6 +127,7 @@ if (app.Environment.IsEnvironment("Local"))
   app.UseCors(allowCorsLocalhost);
 }
 
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

@@ -1,11 +1,13 @@
+using Webapi.DatabaseContext;
 using Webapi.Models.Events;
 
-namespace Webapi.DatabaseContext.WebapiContextExtensions;
+namespace Webapi.ServiceProviderExtensions;
 
-public static partial class WebapiContextExtensions
+public static partial class ServiceProviderExtensions
 {
-  public static void Seed(this WebapiContext context)
+  public static void SeedData(this IServiceProvider serviceProvider)
   {
+    var context = serviceProvider.GetRequiredService<WebapiContext>();
     context.SeedDbSet<Event>(Events);
     context.SaveChanges();
   }
@@ -13,10 +15,12 @@ public static partial class WebapiContextExtensions
   private static void SeedDbSet<TEntity>(this WebapiContext context, IEnumerable<TEntity> range) where TEntity : class
   {
     var dbSet = context.Set<TEntity>();
-    if (!dbSet.Any())
+    if (dbSet.Any())
     {
-      dbSet.AddRange(range);
+      return;
     }
+
+    dbSet.AddRange(range);
   }
 
   private static readonly IList<Event> Events = new List<Event>

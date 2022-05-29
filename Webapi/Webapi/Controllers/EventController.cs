@@ -1,11 +1,13 @@
 using System.Net.Mime;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Webapi.Models.Events;
 using Webapi.Repositories.Events;
 
 namespace Webapi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class EventsController : ControllerBase
@@ -25,7 +27,6 @@ public class EventsController : ControllerBase
     this._mapper = mapper;
     this._logger = logger;
   }
-
 
   [HttpGet]
   [Produces(MediaTypeNames.Application.Json)]
