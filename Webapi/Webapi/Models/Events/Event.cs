@@ -16,7 +16,7 @@ public class Event
 
   public DateTime CreatedAt { get; set; }
 
-  public IList<WebapiUser> Owners { get; set; } = new List<WebapiUser>();
+  public WebapiUser Owner { get; set; }
 
   public string? Description { get; set; }
 
@@ -31,14 +31,15 @@ public class Event
   public Event()
   {
     this.Id = ShortId.Generate(ShortIdOptions);
-    this.Title = default!;
+    this.Title = string.Empty;
+    this.Owner = default!;
   }
 
-  public Event(EventDto eventDto, WebapiUser user)
+  public Event(EventDto eventDto, WebapiUser owner)
   {
     this.Id = ShortId.Generate(ShortIdOptions);
     this.Title = eventDto.Title;
-    this.Owners = new List<WebapiUser> { user };
+    this.Owner = owner;
     this.Description = eventDto.Description;
     this.Start = eventDto.Start;
     this.End = eventDto.End;

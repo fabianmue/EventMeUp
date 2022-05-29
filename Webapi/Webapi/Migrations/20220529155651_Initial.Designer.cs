@@ -12,8 +12,8 @@ using Webapi.DatabaseContext;
 namespace Webapi.Migrations
 {
     [DbContext(typeof(WebapiContext))]
-    [Migration("20220528131603_AddIdentity")]
-    partial class AddIdentity
+    [Migration("20220529155651_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -161,13 +161,24 @@ namespace Webapi.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
+
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("End")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Location")
+                        .HasColumnType("text");
+
                     b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OwnerId")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Start")
@@ -177,10 +188,9 @@ namespace Webapi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Where")
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Events");
                 });
@@ -298,6 +308,15 @@ namespace Webapi.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Webapi.Models.Events.Event", b =>
+                {
+                    b.HasOne("Webapi.Models.Identity.WebapiUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
+
+                    b.Navigation("Owner");
                 });
 #pragma warning restore 612, 618
         }

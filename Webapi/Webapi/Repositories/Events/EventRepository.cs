@@ -19,7 +19,7 @@ public class EventRepository : IEventRepository
 
   public async Task<IList<Event>> GetAllEventsByOwnerAsync(WebapiUser owner)
   {
-    return await this._dbSet.Where(ev => ev.Owners.Contains(owner)).ToListAsync();
+    return await this._dbSet.Where(ev => ev.Owner == owner).ToListAsync();
   }
 
   public async Task<Event?> GetEventAsync(string id)

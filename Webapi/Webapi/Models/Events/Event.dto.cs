@@ -7,8 +7,6 @@ public class EventDto
 
   public DateTime CreatedAt { get; set; }
 
-  public IList<string> Owners { get; set; } = new List<string>();
-
   public string? Description { get; set; }
 
   public DateTime Start { get; set; }

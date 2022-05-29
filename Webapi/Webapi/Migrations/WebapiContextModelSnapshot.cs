@@ -176,6 +176,9 @@ namespace Webapi.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 
+                    b.Property<string>("OwnerId")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("Start")
                         .HasColumnType("timestamp with time zone");
 
@@ -184,6 +187,8 @@ namespace Webapi.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Events");
                 });
@@ -206,9 +211,6 @@ namespace Webapi.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
-
-                    b.Property<string>("EventId")
-                        .HasColumnType("text");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
@@ -244,8 +246,6 @@ namespace Webapi.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EventId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -308,16 +308,13 @@ namespace Webapi.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Webapi.Models.Identity.WebapiUser", b =>
-                {
-                    b.HasOne("Webapi.Models.Events.Event", null)
-                        .WithMany("Owners")
-                        .HasForeignKey("EventId");
-                });
-
             modelBuilder.Entity("Webapi.Models.Events.Event", b =>
                 {
-                    b.Navigation("Owners");
+                    b.HasOne("Webapi.Models.Identity.WebapiUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
+
+                    b.Navigation("Owner");
                 });
 #pragma warning restore 612, 618
         }
