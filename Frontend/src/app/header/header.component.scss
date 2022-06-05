@@ -1,0 +1,28 @@
+.header {
+  height: var(--header-height);
+
+  .home {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  .login,
+  .logout {
+    height: calc(100% - 10px);
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    font-size: 20px;
+    cursor: pointer;
+
+    .icon {
+      margin-right: 8px;
+    }
+  }
+}

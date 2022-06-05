@@ -38,12 +38,13 @@ public class IdentityController : ControllerBase
   [Consumes(MediaTypeNames.Application.Json)]
   [Produces(MediaTypeNames.Application.Json)]
   [ProducesResponseType(StatusCodes.Status200OK)]
+  [ProducesResponseType(StatusCodes.Status400BadRequest)]
   [ProducesResponseType(StatusCodes.Status401Unauthorized)]
   public async Task<ActionResult<UserLoginResponseDto>> Login([FromBody] UserLoginDto userLoginDto)
   {
     if (userLoginDto == null || !ModelState.IsValid)
     {
-      return Unauthorized();
+      return BadRequest();
     }
 
     var user = await this._userManager.FindByEmailAsync(userLoginDto?.Email);
@@ -58,7 +59,10 @@ public class IdentityController : ControllerBase
       return Unauthorized();
     }
 
-    var claims = new List<Claim> { new Claim(ClaimTypes.Email, user.Email) };
+    var claims = new List<Claim> {
+      new Claim("username", user.UserName),
+      new Claim("email", user.Email)
+    };
     var token = GetJwtSecurityToken(claims);
     return Ok(new UserLoginResponseDto
     {
@@ -95,7 +99,7 @@ public class IdentityController : ControllerBase
 
   private JwtSecurityToken GetJwtSecurityToken(IEnumerable<Claim> claims)
   {
-    var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._configuration["JWT:Secret"]));
+    var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._configuration["JWT_SECRET"]));
     return new JwtSecurityToken(
       issuer: this._configuration["JWT:ValidIssuer"],
       audience: this._configuration["JWT:ValidAudience"],

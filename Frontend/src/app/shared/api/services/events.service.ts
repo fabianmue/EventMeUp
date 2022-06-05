@@ -23,20 +23,20 @@ export class EventsService extends BaseService {
   }
 
   /**
-   * Path part for operation eventsGetAllEvents
+   * Path part for operation eventsGetAllMyEvents
    */
-  static readonly EventsGetAllEventsPath = '/Events';
+  static readonly EventsGetAllMyEventsPath = '/Events';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `eventsGetAllEvents()` instead.
+   * To access only the response body, use `eventsGetAllMyEvents()` instead.
    *
    * This method doesn't expect any request body.
    */
-  eventsGetAllEvents$Response(params?: {
+  eventsGetAllMyEvents$Response(params?: {
   }): Observable<StrictHttpResponse<Array<EventDto>>> {
 
-    const rb = new RequestBuilder(this.rootUrl, EventsService.EventsGetAllEventsPath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, EventsService.EventsGetAllMyEventsPath, 'get');
     if (params) {
     }
 
@@ -53,14 +53,14 @@ export class EventsService extends BaseService {
 
   /**
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `eventsGetAllEvents$Response()` instead.
+   * To access the full response (for headers, for example), `eventsGetAllMyEvents$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  eventsGetAllEvents(params?: {
+  eventsGetAllMyEvents(params?: {
   }): Observable<Array<EventDto>> {
 
-    return this.eventsGetAllEvents$Response(params).pipe(
+    return this.eventsGetAllMyEvents$Response(params).pipe(
       map((r: StrictHttpResponse<Array<EventDto>>) => r.body as Array<EventDto>)
     );
   }

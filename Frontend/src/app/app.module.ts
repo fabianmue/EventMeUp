@@ -4,8 +4,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
+import { SharedModule } from './shared/shared.module';
+import { ApiModule } from './shared/api/api.module';
 import { HeaderModule } from './header/header.module';
 import { AppComponent } from './app.component';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   imports: [
@@ -13,6 +16,8 @@ import { AppComponent } from './app.component';
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
+    ApiModule.forRoot({ rootUrl: environment.webapiRooturl }),
+    SharedModule,
     HeaderModule,
   ],
   declarations: [AppComponent],

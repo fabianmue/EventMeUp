@@ -39,7 +39,7 @@ public class EventsController : ControllerBase
   [Produces(MediaTypeNames.Application.Json)]
   [ProducesResponseType(StatusCodes.Status200OK)]
   [ProducesResponseType(StatusCodes.Status404NotFound)]
-  public async Task<ActionResult<IList<EventDto>>> GetAllEvents()
+  public async Task<ActionResult<IList<EventDto>>> GetAllMyEvents()
   {
     var user = await GetCurrentUserAsync();
     if (user == null)

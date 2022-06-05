@@ -50,7 +50,7 @@ builder.Services
       ValidAudience = builder.Configuration["JWT:ValidAudience"],
       ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
       IssuerSigningKey = new SymmetricSecurityKey(
-        Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+        Encoding.UTF8.GetBytes(builder.Configuration["JWT_SECRET"]))
     };
   });
 builder.Services.AddScoped<IEventRepository, EventRepository>();

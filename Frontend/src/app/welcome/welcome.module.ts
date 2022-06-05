@@ -2,12 +2,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { SharedModule } from '../shared/shared.module';
-import { MyEventsComponent } from './my-events.component';
+import { WelcomeComponent } from './welcome.component';
 
-const routes: Routes = [{ path: '', component: MyEventsComponent }];
+const routes: Routes = [{ path: '', component: WelcomeComponent }];
 
 @NgModule({
   imports: [SharedModule, RouterModule.forChild(routes)],
-  declarations: [MyEventsComponent],
+  declarations: [WelcomeComponent],
+  exports: [WelcomeComponent],
 })
-export class MyEventsModule {}
+export class WelcomeModule {}

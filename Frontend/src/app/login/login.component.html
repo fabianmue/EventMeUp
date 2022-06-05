@@ -1,0 +1,26 @@
+<div class="login-container">
+  <form [formGroup]="loginFormGroup" (ngSubmit)="submitForm()" class="form">
+    <mat-form-field class="form-field">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" />
+      <mat-icon matPrefix class="prefix">alternate_email</mat-icon>
+    </mat-form-field>
+    <mat-form-field class="form-field">
+      <mat-label>Password</mat-label>
+      <input matInput type="password" formControlName="password" />
+      <mat-icon matPrefix class="prefix">lock</mat-icon>
+    </mat-form-field>
+    <button
+      mat-button
+      [disabled]="!loginFormGroup.valid || loading"
+      type="submit"
+      class="submit"
+    >
+      <mat-icon>login</mat-icon>
+      <span>Login</span>
+      <mat-icon *ngIf="loading">
+        <mat-spinner diameter="20"></mat-spinner>
+      </mat-icon>
+    </button>
+  </form>
+</div>
