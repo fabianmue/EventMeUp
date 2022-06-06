@@ -80,7 +80,7 @@ public class EventsController : ControllerBase
   [Produces(MediaTypeNames.Application.Json)]
   [ProducesResponseType(StatusCodes.Status200OK)]
   [ProducesResponseType(StatusCodes.Status404NotFound)]
-  public async Task<ActionResult<EventDto>> GetEvent([FromQuery] string eventId)
+  public async Task<ActionResult<EventDto>> GetEvent([FromRoute] string eventId)
   {
     var ev = await this._eventRepository.GetEventAsync(eventId);
     if (ev == default)
@@ -114,7 +114,8 @@ public class EventsController : ControllerBase
   [Consumes(MediaTypeNames.Application.Json)]
   [ProducesResponseType(StatusCodes.Status200OK)]
   [ProducesResponseType(StatusCodes.Status404NotFound)]
-  public async Task<ActionResult<EventDto>> AddEventSignUp([FromQuery] string eventId, [FromBody] SignUpCreateDto signUpCreateDto)
+  public async Task<ActionResult<EventDto>> AddEventSignUp(
+    [FromRoute] string eventId, [FromBody] SignUpCreateDto signUpCreateDto)
   {
     Event? ev = await this._eventService.AddEventSignUpAsync(eventId, signUpCreateDto);
     if (ev == null)

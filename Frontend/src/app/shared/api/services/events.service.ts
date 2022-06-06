@@ -122,13 +122,11 @@ export class EventsService extends BaseService {
    * This method doesn't expect any request body.
    */
   eventsGetEvent$Response(params: {
-    eventId?: string;
     eventId: string;
   }): Observable<StrictHttpResponse<EventDto>> {
 
     const rb = new RequestBuilder(this.rootUrl, EventsService.EventsGetEventPath, 'get');
     if (params) {
-      rb.query('eventId', params.eventId, {});
       rb.path('eventId', params.eventId, {});
     }
 
@@ -150,7 +148,6 @@ export class EventsService extends BaseService {
    * This method doesn't expect any request body.
    */
   eventsGetEvent(params: {
-    eventId?: string;
     eventId: string;
   }): Observable<EventDto> {
 
@@ -171,14 +168,12 @@ export class EventsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   eventsAddEventSignUp$Plain$Response(params: {
-    eventId?: string;
     eventId: string;
     body?: SignUpCreateDto
   }): Observable<StrictHttpResponse<EventDto>> {
 
     const rb = new RequestBuilder(this.rootUrl, EventsService.EventsAddEventSignUpPath, 'post');
     if (params) {
-      rb.query('eventId', params.eventId, {});
       rb.path('eventId', params.eventId, {});
       rb.body(params.body, 'application/json');
     }
@@ -201,7 +196,6 @@ export class EventsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   eventsAddEventSignUp$Plain(params: {
-    eventId?: string;
     eventId: string;
     body?: SignUpCreateDto
   }): Observable<EventDto> {
@@ -218,14 +212,12 @@ export class EventsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   eventsAddEventSignUp$Json$Response(params: {
-    eventId?: string;
     eventId: string;
     body?: SignUpCreateDto
   }): Observable<StrictHttpResponse<EventDto>> {
 
     const rb = new RequestBuilder(this.rootUrl, EventsService.EventsAddEventSignUpPath, 'post');
     if (params) {
-      rb.query('eventId', params.eventId, {});
       rb.path('eventId', params.eventId, {});
       rb.body(params.body, 'application/json');
     }
@@ -248,7 +240,6 @@ export class EventsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   eventsAddEventSignUp$Json(params: {
-    eventId?: string;
     eventId: string;
     body?: SignUpCreateDto
   }): Observable<EventDto> {
