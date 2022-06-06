@@ -1,0 +1,24 @@
+.events-container {
+  height: calc(100vh - var(--header-height));
+
+  .mat-tab-group {
+    height: 100%;
+
+    .mat-tab-label.mat-tab-label {
+      opacity: 1;
+    }
+
+    .mat-tab-body-wrapper {
+      flex-grow: 1;
+      background-color: grey;
+    }
+  }
+}
+
+.tab-container {
+  padding: 10px;
+
+  .event-preview + .event-preview {
+    margin-top: 10px;
+  }
+}

@@ -15,9 +15,9 @@ const routes: Routes = [
       import('./login/login.module').then((m) => m.LoginModule),
   },
   {
-    path: 'my-events',
+    path: 'events',
     loadChildren: () =>
-      import('./my-events/my-events.module').then((m) => m.MyEventsModule),
+      import('./events/events.module').then((m) => m.MyEventsModule),
     canActivate: [AuthorizeGuard],
   },
   {

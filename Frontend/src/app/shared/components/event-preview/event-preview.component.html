@@ -1,0 +1,18 @@
+<mat-card class="event-preview-container">
+  <mat-card-header>
+    <mat-card-title>
+      {{ event.title }}
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="row">
+      <div class="column">
+        <mat-icon>schedule</mat-icon>
+        <span>{{ event | startEnd }}</span>
+      </div>
+    </div>
+    <div class="row">
+      <span>{{ event.description }}</span>
+    </div>
+  </mat-card-content>
+</mat-card>
