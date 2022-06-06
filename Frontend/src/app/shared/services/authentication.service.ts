@@ -1,44 +1,32 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { IdentityService } from '../api/services';
-import { JwtTokenInfo } from '../models/jwt-token-info';
-
-const localStorageJwtTokenInfoKey = 'jwtTokenInfo';
+import { JwtTokenHelper } from '../helpers/jwt-token-helper';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-  private token$: BehaviorSubject<JwtTokenInfo | null>;
-  readonly token: Observable<JwtTokenInfo | null>;
+  private jwtToken$: BehaviorSubject<string | null>;
+  readonly jwtToken: Observable<string | null>;
 
   constructor(
     private readonly identityService: IdentityService,
     private readonly router: Router
   ) {
-    const currentToken = this.parsedLocalStorageToken;
-    this.token$ = new BehaviorSubject<JwtTokenInfo | null>(
-      currentToken && currentToken.validTo > new Date().valueOf()
-        ? currentToken
-        : null
-    );
-    this.token = this.token$
+    this.jwtToken$ = this.initializeJwtToken();
+    this.jwtToken = this.jwtToken$
       .asObservable()
-      .pipe(
-        tap((jwtTokenInfo) =>
-          this.updateJwtTokenInfoInLocalStorage(jwtTokenInfo)
-        )
-      );
+      .pipe(tap(JwtTokenHelper.setJwtToken));
   }
 
-  get tokenValue(): JwtTokenInfo | null {
-    return this.token$.value;
+  get tokenValue(): string | null {
+    return this.jwtToken$.value;
   }
 
   get loggedIn(): Observable<boolean> {
-    return this.token.pipe(map((token) => token !== null));
+    return this.jwtToken.pipe(map((token) => token !== null));
   }
 
   login(email: string, password: string): Observable<void> {
@@ -46,39 +34,27 @@ export class AuthenticationService {
       .identityLogin({ body: { email, password } })
       .pipe(
         map((userLoginResponse) => {
-          const decoded = new JwtHelperService().decodeToken(
-            userLoginResponse.token!
-          ) as { exp: number; username: string; email: string };
-          var jwtTokenInfo = {
-            raw: userLoginResponse.token,
-            validTo: decoded.exp * 1000, // jwt expires is in seconds (not milliseconds!) since epoch
-            username: decoded.username,
-            email: decoded.email,
-          } as JwtTokenInfo;
-          this.token$.next(jwtTokenInfo);
+          this.jwtToken$.next(userLoginResponse.token!);
         })
       );
   }
 
   logout(): void {
-    this.token$.next(null);
+    this.jwtToken$.next(null);
     this.router.navigate(['/']);
   }
 
-  private updateJwtTokenInfoInLocalStorage(jwtTokenInfo: JwtTokenInfo | null) {
-    if (jwtTokenInfo === null) {
-      localStorage.removeItem(localStorageJwtTokenInfoKey);
-      return;
+  private initializeJwtToken(): BehaviorSubject<string | null> {
+    var jwtTokenInitialValue: string | null = null;
+    const jwtToken = JwtTokenHelper.getJwtToken();
+    if (jwtToken !== null) {
+      const parsed = JwtTokenHelper.parseJwtToken(jwtToken);
+
+      if (parsed.validTo > new Date().valueOf()) {
+        jwtTokenInitialValue = jwtToken;
+      }
     }
 
-    localStorage.setItem(
-      localStorageJwtTokenInfoKey,
-      JSON.stringify(jwtTokenInfo)
-    );
-  }
-
-  private get parsedLocalStorageToken(): JwtTokenInfo | null {
-    const currentToken = localStorage.getItem(localStorageJwtTokenInfoKey);
-    return currentToken ? (JSON.parse(currentToken) as JwtTokenInfo) : null;
+    return new BehaviorSubject<string | null>(jwtTokenInitialValue);
   }
 }
