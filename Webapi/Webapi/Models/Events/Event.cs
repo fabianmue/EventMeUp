@@ -12,11 +12,9 @@ public class Event
   [DatabaseGenerated(DatabaseGeneratedOption.None)]
   public string Id { get; set; }
 
-  public string Title { get; set; }
-
   public DateTime CreatedAt { get; set; }
 
-  public WebapiUser Owner { get; set; }
+  public string Title { get; set; }
 
   public string? Description { get; set; }
 
@@ -28,23 +26,29 @@ public class Event
 
   public string? Notes { get; set; }
 
+  public List<WebapiUser> Owners { get; set; }
+
+  public List<SignUp> SignUps { get; set; }
+
   public Event()
   {
     this.Id = ShortId.Generate(ShortIdOptions);
     this.Title = string.Empty;
-    this.Owner = default!;
+    this.Owners = new List<WebapiUser>();
+    this.SignUps = new List<SignUp>();
   }
 
-  public Event(EventDto eventDto, WebapiUser owner)
+  public Event(EventCreateDto eventCreateDto, WebapiUser owner, List<SignUp>? signUps = null)
   {
     this.Id = ShortId.Generate(ShortIdOptions);
-    this.Title = eventDto.Title;
-    this.Owner = owner;
-    this.Description = eventDto.Description;
-    this.Start = eventDto.Start;
-    this.End = eventDto.End;
-    this.Location = eventDto.Location;
-    this.Notes = eventDto.Notes;
+    this.Title = eventCreateDto.Title;
+    this.Description = eventCreateDto.Description;
+    this.Start = eventCreateDto.Start;
+    this.End = eventCreateDto.End;
+    this.Location = eventCreateDto.Location;
+    this.Notes = eventCreateDto.Notes;
+    this.Owners = new List<WebapiUser> { owner };
+    this.SignUps = signUps ?? new List<SignUp>();
   }
 
   private static readonly GenerationOptions ShortIdOptions =

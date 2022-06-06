@@ -1,14 +1,8 @@
-using Webapi.Models.Identity;
-
 namespace Webapi.Models.Events;
 
 #pragma warning disable CS8618 // data transfer object
-public class EventDto
+public class EventCreateDto
 {
-  public string Id { get; set; }
-
-  public DateTime CreatedAt { get; set; }
-
   public string Title { get; set; }
 
   public string? Description { get; set; }
@@ -21,5 +15,5 @@ public class EventDto
 
   public string? Notes { get; set; }
 
-  public List<SignUpDto> SignUps { get; set; }
+  public List<SignUpCreateDto>? SignUps { get; set; }
 }

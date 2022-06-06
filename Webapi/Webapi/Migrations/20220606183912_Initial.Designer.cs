@@ -12,7 +12,7 @@ using Webapi.DatabaseContext;
 namespace Webapi.Migrations
 {
     [DbContext(typeof(WebapiContext))]
-    [Migration("20220529155651_Initial")]
+    [Migration("20220606183912_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,36 @@ namespace Webapi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("EventSignUp", b =>
+                {
+                    b.Property<string>("EventsId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("SignUpsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("EventsId", "SignUpsId");
+
+                    b.HasIndex("SignUpsId");
+
+                    b.ToTable("EventSignUp");
+                });
+
+            modelBuilder.Entity("EventWebapiUser", b =>
+                {
+                    b.Property<string>("OwnedEventsId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OwnersId")
+                        .HasColumnType("text");
+
+                    b.HasKey("OwnedEventsId", "OwnersId");
+
+                    b.HasIndex("OwnersId");
+
+                    b.ToTable("EventWebapiUser");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -178,9 +208,6 @@ namespace Webapi.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 
-                    b.Property<string>("OwnerId")
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("Start")
                         .HasColumnType("timestamp with time zone");
 
@@ -190,9 +217,40 @@ namespace Webapi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId");
-
                     b.ToTable("Events");
+                });
+
+            modelBuilder.Entity("Webapi.Models.Events.SignUp", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AlsoKnownAs")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("SignUps");
                 });
 
             modelBuilder.Entity("Webapi.Models.Identity.WebapiUser", b =>
@@ -259,6 +317,36 @@ namespace Webapi.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("EventSignUp", b =>
+                {
+                    b.HasOne("Webapi.Models.Events.Event", null)
+                        .WithMany()
+                        .HasForeignKey("EventsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Webapi.Models.Events.SignUp", null)
+                        .WithMany()
+                        .HasForeignKey("SignUpsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("EventWebapiUser", b =>
+                {
+                    b.HasOne("Webapi.Models.Events.Event", null)
+                        .WithMany()
+                        .HasForeignKey("OwnedEventsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Webapi.Models.Identity.WebapiUser", null)
+                        .WithMany()
+                        .HasForeignKey("OwnersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -310,13 +398,13 @@ namespace Webapi.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Webapi.Models.Events.Event", b =>
+            modelBuilder.Entity("Webapi.Models.Events.SignUp", b =>
                 {
-                    b.HasOne("Webapi.Models.Identity.WebapiUser", "Owner")
+                    b.HasOne("Webapi.Models.Identity.WebapiUser", "User")
                         .WithMany()
-                        .HasForeignKey("OwnerId");
+                        .HasForeignKey("UserId");
 
-                    b.Navigation("Owner");
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

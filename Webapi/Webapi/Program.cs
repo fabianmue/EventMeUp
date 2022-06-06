@@ -1,7 +1,9 @@
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
@@ -11,12 +13,15 @@ using Webapi.DatabaseContext;
 using Webapi.Models.Identity;
 using Webapi.Repositories.Events;
 using Webapi.ServiceProviderExtensions;
+using Webapi.Services.Events;
 
 var allowCorsLocalhost = "allowCorsLocalhost";
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.Configure<JsonOptions>(options =>
+  options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddDbContext<WebapiContext>(options =>
 {
   string temp = builder.Configuration.GetValue<string>("ENVIRONMENT");
@@ -54,6 +59,7 @@ builder.Services
     };
   });
 builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(configuration =>
 {

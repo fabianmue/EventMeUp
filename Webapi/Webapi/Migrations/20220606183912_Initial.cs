@@ -50,6 +50,24 @@ namespace Webapi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Events",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    Start = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    End = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Location = table.Column<string>(type: "text", nullable: true),
+                    Notes = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Events", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -156,27 +174,73 @@ namespace Webapi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Events",
+                name: "SignUps",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
-                    OwnerId = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    Start = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    End = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Location = table.Column<string>(type: "text", nullable: true),
-                    Notes = table.Column<string>(type: "text", nullable: true)
+                    Username = table.Column<string>(type: "text", nullable: false),
+                    AlsoKnownAs = table.Column<string>(type: "text", nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Events", x => x.Id);
+                    table.PrimaryKey("PK_SignUps", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Events_AspNetUsers_OwnerId",
-                        column: x => x.OwnerId,
+                        name: "FK_SignUps_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EventWebapiUser",
+                columns: table => new
+                {
+                    OwnedEventsId = table.Column<string>(type: "text", nullable: false),
+                    OwnersId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventWebapiUser", x => new { x.OwnedEventsId, x.OwnersId });
+                    table.ForeignKey(
+                        name: "FK_EventWebapiUser_AspNetUsers_OwnersId",
+                        column: x => x.OwnersId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EventWebapiUser_Events_OwnedEventsId",
+                        column: x => x.OwnedEventsId,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EventSignUp",
+                columns: table => new
+                {
+                    EventsId = table.Column<string>(type: "text", nullable: false),
+                    SignUpsId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventSignUp", x => new { x.EventsId, x.SignUpsId });
+                    table.ForeignKey(
+                        name: "FK_EventSignUp_Events_EventsId",
+                        column: x => x.EventsId,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EventSignUp_SignUps_SignUpsId",
+                        column: x => x.SignUpsId,
+                        principalTable: "SignUps",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -217,9 +281,19 @@ namespace Webapi.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Events_OwnerId",
-                table: "Events",
-                column: "OwnerId");
+                name: "IX_EventSignUp_SignUpsId",
+                table: "EventSignUp",
+                column: "SignUpsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventWebapiUser_OwnersId",
+                table: "EventWebapiUser",
+                column: "OwnersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SignUps_UserId",
+                table: "SignUps",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -240,10 +314,19 @@ namespace Webapi.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Events");
+                name: "EventSignUp");
+
+            migrationBuilder.DropTable(
+                name: "EventWebapiUser");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "SignUps");
+
+            migrationBuilder.DropTable(
+                name: "Events");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

@@ -9,6 +9,8 @@ public class WebapiContext : IdentityDbContext<WebapiUser>
 {
   public DbSet<Event> Events { get; set; } = default!;
 
+  public DbSet<SignUp> SignUps { get; set; } = default!;
+
   public WebapiContext() : base()
   {
   }
@@ -26,6 +28,9 @@ public class WebapiContext : IdentityDbContext<WebapiUser>
   {
     base.OnModelCreating(modelBuilder);
     modelBuilder.Entity<Event>()
+      .Property(ev => ev.CreatedAt)
+      .HasDefaultValueSql("now()");
+    modelBuilder.Entity<SignUp>()
       .Property(ev => ev.CreatedAt)
       .HasDefaultValueSql("now()");
   }

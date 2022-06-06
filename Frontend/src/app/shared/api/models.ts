@@ -1,5 +1,9 @@
+export { EventCreateDto } from './models/event-create-dto';
 export { EventDto } from './models/event-dto';
 export { ProblemDetails } from './models/problem-details';
+export { SignUpCreateDto } from './models/sign-up-create-dto';
+export { SignUpDto } from './models/sign-up-dto';
+export { SignUpStatus } from './models/sign-up-status';
 export { UserLoginDto } from './models/user-login-dto';
 export { UserLoginResponseDto } from './models/user-login-response-dto';
 export { UserRegisterDto } from './models/user-register-dto';

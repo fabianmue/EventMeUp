@@ -14,18 +14,15 @@ public static partial class ServiceProviderExtensions
     var userManager = serviceProvider.GetRequiredService<UserManager<WebapiUser>>();
     var mapper = serviceProvider.GetRequiredService<IMapper>();
 
-    IList<WebapiUser> createdUsers = userManager.SeedWebapiUsers(mapper, UserRegisterDtos);
-    IList<Event> events = EventDtos
-      .Select(eventDto => new Event(eventDto, createdUsers.ElementAt(0)))
-      .ToList();
-    context.SeedDbSet<Event>(events);
-    context.SaveChanges();
+    List<WebapiUser> createdUsers = SeedWebapiUsers(userManager, mapper, UserRegisterDtos);
+    List<SignUp> createdSignUps = SeedSignUps(context, SignUpCreateDtos, createdUsers);
+    List<Event> _ = SeedEvents(context, EventCreateDtos, createdSignUps, createdUsers);
   }
 
-  private static IList<WebapiUser> SeedWebapiUsers(
-    this UserManager<WebapiUser> userManager,
+  private static List<WebapiUser> SeedWebapiUsers(
+    UserManager<WebapiUser> userManager,
     IMapper mapper,
-    IEnumerable<UserRegisterDto> userRegisterDtos)
+    List<UserRegisterDto> userRegisterDtos)
   {
     if (userManager.Users.Any())
     {
@@ -45,6 +42,43 @@ public static partial class ServiceProviderExtensions
       .ToList();
   }
 
+  private static List<SignUp> SeedSignUps(
+    WebapiContext context,
+    List<SignUpCreateDto> signUpCreateDtos,
+    List<WebapiUser> users
+  )
+  {
+    var signUps = signUpCreateDtos
+      .Select(signUpCreateDto =>
+      {
+        WebapiUser? matchingUser = signUpCreateDto.Email != null
+          ? users.FirstOrDefault(user => user.Email == signUpCreateDto.Email)
+          : null;
+        return new SignUp(signUpCreateDto, matchingUser);
+      })
+      .ToList();
+    context.SeedDbSet<SignUp>(signUps);
+    return signUps;
+  }
+
+  private static List<Event> SeedEvents(
+    WebapiContext context,
+    List<EventCreateDto> eventCreateDtos,
+    List<SignUp> signUps,
+    List<WebapiUser> users)
+  {
+    var random = new Random();
+    List<Event> events = eventCreateDtos
+      .Select(eventCreateDto =>
+      {
+        WebapiUser owner = users.ElementAt(random.Next(users.Count));
+        return new Event(eventCreateDto, owner, signUps);
+      })
+      .ToList();
+    context.SeedDbSet<Event>(events);
+    return events;
+  }
+
   private static void SeedDbSet<TEntity>(this WebapiContext context, IEnumerable<TEntity> range) where TEntity : class
   {
     var dbSet = context.Set<TEntity>();
@@ -54,20 +88,38 @@ public static partial class ServiceProviderExtensions
     }
 
     dbSet.AddRange(range);
+    context.SaveChanges();
   }
 
-  private static readonly IList<UserRegisterDto> UserRegisterDtos = new List<UserRegisterDto>
+  private static readonly List<UserRegisterDto> UserRegisterDtos = new()
   {
     new UserRegisterDto {
       Email = "user@eventmeup.test",
-      Username = "user",
+      Username = "Username",
       Password = "EventMeUp123"
     }
   };
 
-  private static readonly IList<EventDto> EventDtos = new List<EventDto>
+  private static readonly List<SignUpCreateDto> SignUpCreateDtos = new()
   {
-    new EventDto
+    new SignUpCreateDto
+    {
+      Username = "Random person on the internet one",
+      AlsoKnownAs = "the stranger",
+      Status = SignUpStatus.Accepted
+    },
+    new SignUpCreateDto
+    {
+      Username = "Username",
+      AlsoKnownAs = "the registered",
+      Status = SignUpStatus.Accepted,
+      Email = "user@eventmeup.test"
+    }
+  };
+
+  private static readonly List<EventCreateDto> EventCreateDtos = new()
+  {
+    new EventCreateDto
     {
       Title = "Squash - blood sweat and tears (of joy!)",
       Description = "It's all fun and games until...",
@@ -75,12 +127,13 @@ public static partial class ServiceProviderExtensions
       Notes = "Bring your own racket or rent one",
       Location = "Airgate, Oerlikon"
     },
-    new EventDto
+    new EventCreateDto
     {
       Title = "Squash - the sweet squashvenge",
       Description = "Fool me once, shame on me. Fool me twice, shame on - wait, what?",
-      Start = new DateTime(2022, 5, 31, 12, 0, 0).ToUniversalTime(),
-      Notes = "Bring your own racket or rent one",
+      Start = new DateTime(2022, 5, 31, 18, 30, 0).ToUniversalTime(),
+      End = new DateTime(2022, 5, 31, 19, 15, 0).ToUniversalTime(),
+      Notes = "Bring your own racket",
       Location = "Vitis, Schlieren"
     }
   };

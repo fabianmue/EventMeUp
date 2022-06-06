@@ -17,9 +17,19 @@ public class EventRepository : IEventRepository
     this._dbSet = this._context.Set<Event>();
   }
 
-  public async Task<IList<Event>> GetAllEventsByOwnerAsync(WebapiUser owner)
+  public async Task<IList<Event>> GetAllEventsByOwnerAsync(WebapiUser user)
   {
-    return await this._dbSet.Where(ev => ev.Owner == owner).ToListAsync();
+    return await this._dbSet.Where(ev => ev.Owners.Contains(user)).ToListAsync();
+  }
+
+  public async Task<IList<Event>> GetAllEventsBySingedUpUserAsync(WebapiUser user)
+  {
+    return await this._dbSet.Where(ev =>
+      ev.SignUps
+        .Where(signUp => signUp.User != null)
+        .Select(signUp => signUp.User)
+        .Contains(user)
+    ).ToListAsync();
   }
 
   public async Task<Event?> GetEventAsync(string id)
@@ -31,5 +41,16 @@ public class EventRepository : IEventRepository
   {
     await this._dbSet.AddAsync(ev);
     await this._context.SaveChangesAsync();
+  }
+
+  public async Task AddEventRangeAsync(List<Event> events)
+  {
+    await this._dbSet.AddRangeAsync(events);
+    await this._context.SaveChangesAsync();
+  }
+
+  public async Task<int> SaveChangesAsync()
+  {
+    return await this._context.SaveChangesAsync();
   }
 }
