@@ -7,11 +7,13 @@
   .form {
     display: flex;
     flex-direction: column;
+    align-items: center;
     max-width: 400px;
     margin-top: 120px;
 
     .form-field {
       font-size: 18px;
+      width: 300px;
 
       .mat-form-field-appearance-outline,
       .mat-form-field-prefix {
@@ -25,6 +27,7 @@
         font-size: $size;
         height: $size;
         width: $size;
+        color: rgba(0, 0, 0, 0.26);
       }
     }
 
@@ -33,6 +36,7 @@
       justify-content: center;
       align-items: center;
       font-size: 18px;
+      width: 150px;
 
       span {
         margin: 0 5px;
