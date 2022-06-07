@@ -47,7 +47,7 @@ public class IdentityController : ControllerBase
       return BadRequest();
     }
 
-    var user = await this._userManager.FindByEmailAsync(userLoginDto?.Email);
+    WebapiUser user = await this._userManager.FindByEmailAsync(userLoginDto?.Email);
     if (user == null)
     {
       return Unauthorized();
@@ -63,7 +63,7 @@ public class IdentityController : ControllerBase
       new Claim("username", user.UserName),
       new Claim("email", user.Email)
     };
-    var token = GetJwtSecurityToken(claims);
+    JwtSecurityToken token = GetJwtSecurityToken(claims);
     return Ok(new UserLoginResponseDto
     {
       Token = new JwtSecurityTokenHandler().WriteToken(token)

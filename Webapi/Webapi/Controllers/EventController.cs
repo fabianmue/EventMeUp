@@ -46,13 +46,13 @@ public class EventsController : ControllerBase
   [ProducesResponseType(StatusCodes.Status404NotFound)]
   public async Task<ActionResult<IList<EventDto>>> GetAllMyOwnedEvents()
   {
-    var user = await this.GetCurrentUserAsync();
+    WebapiUser? user = await this.GetCurrentUserAsync();
     if (user == null)
     {
       return this.NotFound();
     }
 
-    var events = await this._eventRepository.GetAllEventsByOwnerAsync(user);
+    IList<Event> events = await this._eventRepository.GetAllEventsByOwnerAsync(user);
     return this.Ok(_mapper.Map<IList<EventDto>>(events)
       .OrderBy(eventDto => eventDto.Start));
   }
@@ -65,13 +65,13 @@ public class EventsController : ControllerBase
   [ProducesResponseType(StatusCodes.Status404NotFound)]
   public async Task<ActionResult<IList<EventDto>>> GetAllMySignedUpEvents()
   {
-    var user = await this.GetCurrentUserAsync();
+    WebapiUser? user = await this.GetCurrentUserAsync();
     if (user == null)
     {
       return this.NotFound();
     }
 
-    var events = await this._eventRepository.GetAllEventsBySingedUpUserAsync(user);
+    IList<Event> events = await this._eventRepository.GetAllEventsBySingedUpUserAsync(user);
     return this.Ok(_mapper.Map<IList<EventDto>>(events)
       .OrderBy(eventDto => eventDto.Start));
   }
@@ -82,7 +82,7 @@ public class EventsController : ControllerBase
   [ProducesResponseType(StatusCodes.Status404NotFound)]
   public async Task<ActionResult<EventDto>> GetEvent([FromRoute] string eventId)
   {
-    var ev = await this._eventRepository.GetEventAsync(eventId);
+    Event? ev = await this._eventRepository.GetEventAsync(eventId);
     if (ev == default)
     {
       return this.NotFound();
@@ -98,7 +98,7 @@ public class EventsController : ControllerBase
   [ProducesResponseType(StatusCodes.Status201Created)]
   public async Task<ActionResult<EventDto>> CreateEvent([FromBody] EventCreateDto eventCreateDto)
   {
-    var user = await this.GetCurrentUserAsync();
+    WebapiUser? user = await this.GetCurrentUserAsync();
     if (user == null)
     {
       return this.NotFound();
@@ -106,7 +106,6 @@ public class EventsController : ControllerBase
 
     var ev = new Event(eventCreateDto, user);
     await this._eventRepository.AddEventAsync(ev);
-
     return this.CreatedAtAction(nameof(GetEvent), new { id = ev.Id }, this._mapper.Map<EventDto>(ev));
   }
 
