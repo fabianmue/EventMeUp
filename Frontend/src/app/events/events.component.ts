@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { concat, map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { EventDto } from '../shared/api/models';
 import { EventsService } from '../shared/api/services';
@@ -14,9 +14,7 @@ export class EventsComponent implements OnInit {
   signedUp$: Observable<Array<EventDto>>;
 
   constructor(readonly eventsService: EventsService) {
-    this.owned$ = eventsService
-      .eventsGetAllMyOwnedEvents()
-      .pipe(map((events) => Array.from({ length: 5 }, () => events).flat()));
+    this.owned$ = eventsService.eventsGetAllMyOwnedEvents();
     this.signedUp$ = eventsService.eventsGetAllMySignedUpEvents();
   }
 

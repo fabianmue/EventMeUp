@@ -4,8 +4,12 @@
   .mat-tab-group {
     height: 100%;
 
-    .mat-tab-label.mat-tab-label {
+    .mat-tab-label {
       opacity: 1;
+
+      .mat-tab-label-content {
+        font-size: var(--font-size-large);
+      }
     }
 
     .mat-tab-body-wrapper {

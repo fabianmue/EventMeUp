@@ -1,18 +1,32 @@
 <mat-card class="event-preview-container">
-  <mat-card-header>
-    <mat-card-title>
-      {{ event.title }}
-    </mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <div class="row">
-      <div class="column">
-        <mat-icon>schedule</mat-icon>
-        <span>{{ event | startEnd }}</span>
+  <div class="row">
+    <span class="title">{{ event.title }}</span>
+  </div>
+  <div class="row">
+    <div class="column icon-column">
+      <mat-icon class="icon">schedule</mat-icon>
+      <span class="text">{{ event | startEnd }}</span>
+    </div>
+    <div class="column icon-column">
+      <span class="text">{{ event.location }}</span>
+      <mat-icon class="icon">pin_drop</mat-icon>
+    </div>
+    <div class="column icon-column">
+      <div>
+        <mat-icon class="icon">check</mat-icon>
+        <span class="text">{{ accepted }}</span>
+      </div>
+      <div>
+        <mat-icon class="icon">question_mark</mat-icon>
+        <span class="text">{{ tentative }}</span>
+      </div>
+      <div>
+        <mat-icon class="icon">close</mat-icon>
+        <span class="text">{{ declined }}</span>
       </div>
     </div>
-    <div class="row">
-      <span>{{ event.description }}</span>
-    </div>
-  </mat-card-content>
+  </div>
+  <div class="row">
+    <span class="description">{{ event.description }}</span>
+  </div>
 </mat-card>

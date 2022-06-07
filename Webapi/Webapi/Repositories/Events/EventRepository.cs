@@ -19,22 +19,32 @@ public class EventRepository : IEventRepository
 
   public async Task<IList<Event>> GetAllEventsByOwnerAsync(WebapiUser user)
   {
-    return await this._dbSet.Where(ev => ev.Owners.Contains(user)).ToListAsync();
+    return await this._dbSet
+      .Where(ev => ev.Owners.Contains(user))
+      .Include(ev => ev.SignUps)
+      .Include(ev => ev.Owners)
+      .ToListAsync();
   }
 
   public async Task<IList<Event>> GetAllEventsBySingedUpUserAsync(WebapiUser user)
   {
-    return await this._dbSet.Where(ev =>
-      ev.SignUps
-        .Where(signUp => signUp.User != null)
-        .Select(signUp => signUp.User)
-        .Contains(user)
-    ).ToListAsync();
+    return await this._dbSet
+      .Where(ev =>
+        ev.SignUps
+          .Where(signUp => signUp.User != null)
+          .Select(signUp => signUp.User)
+          .Contains(user))
+      .Include(ev => ev.SignUps)
+      .Include(ev => ev.Owners)
+      .ToListAsync();
   }
 
   public async Task<Event?> GetEventAsync(string id)
   {
-    return await this._dbSet.SingleOrDefaultAsync(entity => entity.Id == id);
+    return await this._dbSet
+      .Include(ev => ev.SignUps)
+      .Include(ev => ev.Owners)
+      .SingleOrDefaultAsync(entity => entity.Id == id);
   }
 
   public async Task AddEventAsync(Event ev)
