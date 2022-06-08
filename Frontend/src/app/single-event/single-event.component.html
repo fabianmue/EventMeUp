@@ -1,0 +1,7 @@
+<div class="single-event-container">
+  <app-event *ngIf="event$ | async as event; else noEvent" [event]="event">
+  </app-event>
+  <ng-template #noEvent>
+    <div>Error</div>
+  </ng-template>
+</div>

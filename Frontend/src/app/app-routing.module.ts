@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AuthorizeGuard } from './shared/guards/authorize.guard';
+import { SingleEventComponent } from './single-event/single-event.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,10 @@ const routes: Routes = [
     loadChildren: () =>
       import('./events/events.module').then((m) => m.MyEventsModule),
     canActivate: [AuthorizeGuard],
+  },
+  {
+    path: ':id',
+    component: SingleEventComponent,
   },
   {
     path: '**',

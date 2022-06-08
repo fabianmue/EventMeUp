@@ -4,13 +4,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JwtModule } from '@auth0/angular-jwt';
 
+import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './shared/shared.module';
 import { ApiModule } from './shared/api/api.module';
 import { JwtTokenHelper } from './shared/helpers/jwt-token-helper';
 import { HeaderModule } from './header/header.module';
 import { AppComponent } from './app.component';
-import { environment } from 'src/environments/environment';
+import { SingleEventComponent } from './single-event/single-event.component';
 
 @NgModule({
   imports: [
@@ -28,7 +29,7 @@ import { environment } from 'src/environments/environment';
     SharedModule,
     HeaderModule,
   ],
-  declarations: [AppComponent],
+  declarations: [AppComponent, SingleEventComponent],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
