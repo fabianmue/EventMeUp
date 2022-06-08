@@ -22,6 +22,8 @@ public class Event
 
   public DateTime? End { get; set; }
 
+  public EventCategory? Category { get; set; }
+
   public string? Location { get; set; }
 
   public string? Notes { get; set; }
@@ -45,6 +47,7 @@ public class Event
     this.Description = eventCreateDto.Description;
     this.Start = eventCreateDto.Start;
     this.End = eventCreateDto.End;
+    this.Category = eventCreateDto.Category;
     this.Location = eventCreateDto.Location;
     this.Notes = eventCreateDto.Notes;
     this.Owners = new List<WebapiUser> { owner };

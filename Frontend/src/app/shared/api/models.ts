@@ -1,3 +1,4 @@
+export { EventCategory } from './models/event-category';
 export { EventCreateDto } from './models/event-create-dto';
 export { EventDto } from './models/event-dto';
 export { ProblemDetails } from './models/problem-details';

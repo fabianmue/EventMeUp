@@ -124,6 +124,7 @@ public static partial class ServiceProviderExtensions
       Title = "Squash - blood sweat and tears (of joy!)",
       Description = "It's all fun and games until...",
       Start = new DateTime(2022, 5, 24, 12, 0, 0).ToUniversalTime(),
+      Category = EventCategory.Sports,
       Notes = "Bring your own racket or rent one",
       Location = "Airgate, Oerlikon"
     },

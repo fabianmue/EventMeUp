@@ -8,10 +8,6 @@
       <span class="text">{{ event | startEnd }}</span>
     </div>
     <div class="column icon-column">
-      <span class="text">{{ event.location }}</span>
-      <mat-icon class="icon">pin_drop</mat-icon>
-    </div>
-    <div class="column icon-column">
       <div>
         <mat-icon class="icon">check</mat-icon>
         <span class="text">{{ accepted }}</span>
@@ -24,6 +20,14 @@
         <mat-icon class="icon">close</mat-icon>
         <span class="text">{{ declined }}</span>
       </div>
+    </div>
+    <div class="column icon-column">
+      <mat-icon class="icon">pin_drop</mat-icon>
+      <span class="text">{{ event.location }}</span>
+    </div>
+    <div class="column icon-column" *ngIf="event.category">
+      <mat-icon class="icon">star</mat-icon>
+      <span class="text">{{ event.category }}</span>
     </div>
   </div>
   <div class="row">

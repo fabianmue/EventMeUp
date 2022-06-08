@@ -17,6 +17,8 @@ public class EventDto
 
   public DateTime? End { get; set; }
 
+  public EventCategory? Category { get; set; }
+
   public string? Location { get; set; }
 
   public string? Notes { get; set; }
