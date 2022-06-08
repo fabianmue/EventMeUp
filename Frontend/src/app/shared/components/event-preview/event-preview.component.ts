@@ -12,32 +12,23 @@ export class EventPreviewComponent {
   @Input() event!: EventDto;
 
   get accepted(): number {
-    if (!this.event?.signUps) {
-      return 0;
-    }
-
-    return this.event.signUps.filter(
-      (signUp) => signUp.status === SignUpStatus.Accepted
-    ).length;
+    return this.getStatusCount(SignUpStatus.Accepted);
   }
 
   get tentative(): number {
-    if (!this.event?.signUps) {
-      return 0;
-    }
-
-    return this.event.signUps.filter(
-      (signUp) => signUp.status === SignUpStatus.Tentative
-    ).length;
+    return this.getStatusCount(SignUpStatus.Tentative);
   }
 
   get declined(): number {
+    return this.getStatusCount(SignUpStatus.Declined);
+  }
+
+  private getStatusCount(status: SignUpStatus): number {
     if (!this.event?.signUps) {
       return 0;
     }
 
-    return this.event.signUps.filter(
-      (signUp) => signUp.status === SignUpStatus.Declined
-    ).length;
+    return this.event.signUps.filter((signUp) => signUp.status === status)
+      .length;
   }
 }

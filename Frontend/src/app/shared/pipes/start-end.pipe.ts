@@ -11,8 +11,8 @@ export class StartEndPipe implements PipeTransform {
     if (value.end === null) {
       const format =
         start.getFullYear() === new Date().getFullYear()
-          ? 'EEE, d. MMM h:mm'
-          : 'EEE, d. MMM, y h:mm';
+          ? 'EEE, d. MMM H:mm'
+          : 'EEE, d. MMM, y H:mm';
       return datePipe.transform(start, format);
     }
 
@@ -24,8 +24,8 @@ export class StartEndPipe implements PipeTransform {
     ) {
       const format =
         start.getFullYear() === new Date().getFullYear()
-          ? 'EEE, d. MMM h:mm'
-          : 'EEE, d. MMM, y h:mm';
+          ? 'EEE, d. MMM H:mm'
+          : 'EEE, d. MMM, y H:mm';
       return `${datePipe.transform(start, format)} - ${datePipe.transform(
         end,
         'h:mm'
@@ -35,15 +35,15 @@ export class StartEndPipe implements PipeTransform {
     if (start.getFullYear() === end.getFullYear()) {
       const format =
         start.getFullYear() === new Date().getFullYear()
-          ? 'EEE, d. MMM h:mm'
-          : 'EEE, d. MMM, y h:mm';
+          ? 'EEE, d. MMM H:mm'
+          : 'EEE, d. MMM, y H:mm';
       return `${datePipe.transform(start, format)} - ${datePipe.transform(
         end,
         format
       )}`;
     }
 
-    const format = 'EEE, d. MMM, y h:mm';
+    const format = 'EEE, d. MMM, y H:mm';
     return `${datePipe.transform(start, format)} - ${datePipe.transform(
       end,
       format

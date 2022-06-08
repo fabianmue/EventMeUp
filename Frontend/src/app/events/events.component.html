@@ -2,16 +2,24 @@
   <mat-tab-group class="tab-group">
     <mat-tab label="My Events">
       <div class="tab-container">
-        <div *ngFor="let owned of owned$ | async" class="event-preview">
+        <a
+          *ngFor="let owned of owned$ | async"
+          class="event-preview"
+          [href]="owned.id"
+        >
           <app-event-preview [event]="owned"></app-event-preview>
-        </div>
+        </a>
       </div>
     </mat-tab>
     <mat-tab label="My Signups">
       <div class="tab-container">
-        <div *ngFor="let signedUp of signedUp$ | async" class="event-preview">
+        <a
+          *ngFor="let signedUp of signedUp$ | async"
+          class="event-preview"
+          [href]="signedUp.id"
+        >
           <app-event-preview [event]="signedUp"></app-event-preview>
-        </div>
+        </a>
       </div>
     </mat-tab>
   </mat-tab-group>
