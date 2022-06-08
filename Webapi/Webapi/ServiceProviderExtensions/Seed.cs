@@ -136,6 +136,33 @@ public static partial class ServiceProviderExtensions
       End = new DateTime(2022, 5, 31, 19, 15, 0).ToUniversalTime(),
       Notes = "Bring your own racket",
       Location = "Vitis, Schlieren"
+    },
+    new EventCreateDto
+    {
+      Title = "Signature gathering",
+      Description = "Everything for the dachshund, everything for the club.",
+      Start = new DateTime(2022, 08, 06, 11, 30, 0).ToUniversalTime(),
+      End = new DateTime(2022, 08, 06, 13, 00, 0).ToUniversalTime(),
+      Category = EventCategory.Political,
+      Location = "Bahnhofsstrasse, Zürich"
+    },
+    new EventCreateDto
+    {
+      Title = "THE Party",
+      Description = "Not just any party - THE party!",
+      Start = new DateTime(2022, 08, 06, 19, 30, 0).ToUniversalTime(),
+      End = new DateTime(2022, 08, 07, 4, 00, 0).ToUniversalTime(),
+      Category = EventCategory.Social,
+      Location = "WG SH South, Binz"
+    },
+    new EventCreateDto
+    {
+      Title = "New years eve",
+      Description = "This gon' be gud",
+      Start = new DateTime(2022, 12, 31, 22, 0, 0).ToUniversalTime(),
+      End = new DateTime(2023, 01, 01, 2, 00, 0).ToUniversalTime(),
+      Category = EventCategory.Social,
+      Location = "WG SH South, Binz"
     }
   };
 }
