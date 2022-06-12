@@ -29,6 +29,14 @@ export class AuthenticationService {
     return this.jwtToken.pipe(map((token) => token !== null));
   }
 
+  get username(): Observable<string | null> {
+    return this.jwtToken.pipe(
+      map((token) =>
+        token === null ? null : JwtTokenHelper.parseJwtToken(token).username
+      )
+    );
+  }
+
   login(email: string, password: string): Observable<void> {
     return this.identityService
       .identityLogin({ body: { email, password } })

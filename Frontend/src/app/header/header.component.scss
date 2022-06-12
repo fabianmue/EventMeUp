@@ -6,6 +6,10 @@
     display: flex;
     align-items: center;
     padding: 0 8px;
+
+    .icon {
+      margin-right: 8px;
+    }
   }
 
   .spacer {
@@ -22,7 +26,17 @@
     cursor: pointer;
 
     .icon {
-      margin-right: 8px;
+      margin-left: 8px;
     }
+  }
+
+  a,
+  a:link,
+  a:visited,
+  a:focus,
+  a:hover,
+  a:active {
+    color: rgba(0, 0, 0, 0.87);
+    text-decoration: none;
   }
 }

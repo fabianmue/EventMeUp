@@ -1,0 +1,15 @@
+.welcome-container {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--font-size-medium);
+
+  .title {
+    font-size: var(--font-size-large);
+    padding: 10px 0 15px 0;
+  }
+
+  .from-here {
+    padding: 15px 0 0 0;
+  }
+}

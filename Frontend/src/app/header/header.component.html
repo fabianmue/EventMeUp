@@ -1,14 +1,17 @@
 <mat-toolbar class="header">
-  <a href="/" class="home">EventMeUp</a>
+  <a href="/" class="home">
+    <mat-icon class="icon">home</mat-icon>
+    EventMeUp
+  </a>
   <div class="spacer"></div>
   <a href="/login" class="login" *ngIf="!(loggedIn$ | async); else loggedIn">
-    <mat-icon class="icon">account_circle</mat-icon>
     Login
+    <mat-icon class="icon">account_circle</mat-icon>
   </a>
   <ng-template #loggedIn>
     <a (click)="logout()" class="logout">
-      <mat-icon class="icon">logout</mat-icon>
       Logout
+      <mat-icon class="icon">logout</mat-icon>
     </a>
   </ng-template>
 </mat-toolbar>
