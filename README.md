@@ -38,4 +38,4 @@ A simple web application to create, organise and share events with your friends!
 
 > As a user, I want to be able to select the language for the application. I want to be able to choose from English, German and Swiss German.
 
-> As a logged in user, I want to be able to create and event without logging in. Once I created an event, I can manage the event using a link that is displayed once the event is created. If I lose the link, I lose the ability to manage the event. `This way the login functionality could be removed entirely - this way no user data would have to be stored at all.`
+> As a logged in user, I want to be able to create and event without logging in. Once I created an event, I can manage the event using a link that is displayed once the event is created. If I lose the link, I lose the ability to manage the event. `This way the login functionality could be removed entirely - no user data would have to be stored at all.`
