@@ -8,7 +8,7 @@ A simple web application to create, organise and share events with your friends!
 
 > As a user, I want to be able to create an account and login / logout using that account.
 
-> As a user, I want to be able to access events created by myself / others using an url without login. I want to be able to sign up, decline or set myself to tentative to the event with a name I choose. I also want to be able to add a personal comment regarding my sign up status.
+> As a user, I want to be able to access events created by myself / others using an url without login. I want to be able to sign up, decline or set myself to tentative to the event with a name I choose. I also want to be able to add a personal comment regarding my sign up status. Once I set my status or commented, I can edit my actions using a link that is displayed. If I lose the link, I lose the ability to edit my status or comments.
 
 > As a logged in user, I want to be able to see all events I created in the future and the recent past.
 
@@ -37,3 +37,5 @@ A simple web application to create, organise and share events with your friends!
 > As a logged in user, I want to be able to hide the participants for events I created.
 
 > As a user, I want to be able to select the language for the application. I want to be able to choose from English, German and Swiss German.
+
+> As a logged in user, I want to be able to create and event without logging in. Once I created an event, I can manage the event using a link that is displayed once the event is created. If I lose the link, I lose the ability to manage the event. `This way the login functionality could be removed entirely - this way no user data would have to be stored at all.`
