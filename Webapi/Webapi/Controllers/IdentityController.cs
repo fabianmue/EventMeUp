@@ -75,7 +75,6 @@ public class IdentityController : ControllerBase
   [Produces(MediaTypeNames.Application.Json)]
   [ProducesResponseType(StatusCodes.Status201Created)]
   [ProducesResponseType(StatusCodes.Status400BadRequest)]
-  [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(UserRegisterResponseDto))]
   public async Task<IActionResult> Register([FromBody] UserRegisterDto userRegisterDto)
   {
     if (userRegisterDto == null || !ModelState.IsValid)
@@ -88,10 +87,7 @@ public class IdentityController : ControllerBase
       user, userRegisterDto.Password);
     if (!result.Succeeded)
     {
-      return BadRequest(new UserRegisterResponseDto
-      {
-        Errors = result.Errors.Select(error => error.Code)
-      });
+      return BadRequest();
     }
 
     return StatusCode(201);

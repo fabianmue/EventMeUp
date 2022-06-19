@@ -8,4 +8,3 @@ export { SignUpStatus } from './models/sign-up-status';
 export { UserLoginDto } from './models/user-login-dto';
 export { UserLoginResponseDto } from './models/user-login-response-dto';
 export { UserRegisterDto } from './models/user-register-dto';
-export { UserRegisterResponseDto } from './models/user-register-response-dto';

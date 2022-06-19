@@ -4,6 +4,9 @@
       <mat-label>Email</mat-label>
       <input matInput type="email" formControlName="email" />
       <mat-icon matPrefix class="prefix">alternate_email</mat-icon>
+      <mat-error *ngIf="loginFormGroup.get('email')?.hasError('email')">
+        Please enter a valid email
+      </mat-error>
     </mat-form-field>
     <mat-form-field class="form-field">
       <mat-label>Password</mat-label>
@@ -12,7 +15,7 @@
     </mat-form-field>
     <button
       mat-button
-      [disabled]="!loginFormGroup.valid || loading"
+      [disabled]="loginFormGroup.invalid || loading"
       type="submit"
       class="submit"
     >
@@ -23,4 +26,10 @@
       </mat-icon>
     </button>
   </form>
+  <div *ngIf="error" class="error">
+    Failed to login
+    <button mat-icon-button (click)="error = false" class="close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
 </div>

@@ -1,3 +1,71 @@
 <div class="register-container">
-  <span>register works!</span>
+  <form [formGroup]="registerFormGroup" (ngSubmit)="submitForm()" class="form">
+    <mat-form-field class="form-field">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" />
+      <mat-icon matPrefix class="prefix">alternate_email</mat-icon>
+      <mat-error *ngIf="registerFormGroup.get('email')?.hasError('email')">
+        Please enter a valid email
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="form-field">
+      <mat-label>Username</mat-label>
+      <input matInput type="text" formControlName="username" />
+      <mat-icon matPrefix class="prefix">person</mat-icon>
+      <mat-error *ngIf="registerFormGroup.get('username')?.hasError('pattern')">
+        Username may only container letters
+      </mat-error>
+      <mat-error
+        *ngIf="
+          !registerFormGroup.get('password')?.hasError('pattern') &&
+          (registerFormGroup.get('password')?.hasError('minlength') ||
+            registerFormGroup.get('password')?.hasError('maxlength'))
+        "
+      >
+        Username must contain between 3 and 20 characters
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="form-field">
+      <mat-label>Password</mat-label>
+      <input matInput type="password" formControlName="password" />
+      <mat-icon matPrefix class="prefix">lock</mat-icon>
+      <mat-error *ngIf="registerFormGroup.get('password')?.hasError('pattern')">
+        Password must contain at least one digit, lower- and uppercase letter
+      </mat-error>
+      <mat-error
+        *ngIf="
+          !registerFormGroup.get('password')?.hasError('pattern') &&
+          registerFormGroup.get('password')?.hasError('minlength')
+        "
+      >
+        Password must contain at least 8 characters
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="form-field">
+      <mat-label>Confirm Password</mat-label>
+      <input matInput type="password" formControlName="confirmPassword" />
+      <mat-icon matPrefix class="prefix">lock</mat-icon>
+      <mat-error *ngIf="registerFormGroup?.hasError('passwordsDifferent')">
+        Confirmed password must match password
+      </mat-error>
+    </mat-form-field>
+    <button
+      mat-button
+      [disabled]="registerFormGroup.invalid || loading"
+      type="submit"
+      class="submit"
+    >
+      <mat-icon>done</mat-icon>
+      <span>Register</span>
+      <mat-icon *ngIf="loading">
+        <mat-spinner diameter="20"></mat-spinner>
+      </mat-icon>
+    </button>
+  </form>
+  <div *ngIf="error" class="error">
+    Failed to register user
+    <button mat-icon-button (click)="error = false" class="close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
 </div>

@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { first } from 'rxjs';
 
 import { AuthenticationService } from '../shared/services/authentication.service';
 
@@ -13,7 +12,7 @@ import { AuthenticationService } from '../shared/services/authentication.service
 export class LoginComponent implements OnInit {
   loginFormGroup: FormGroup;
   loading = false;
-  error: { code: number } | null = null;
+  error = false;
 
   constructor(
     private readonly authenticationService: AuthenticationService,
@@ -30,17 +29,13 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {}
 
   submitForm(): void {
-    if (this.loginFormGroup.invalid) {
-      return;
-    }
-
     this.loading = true;
+    this.error = false;
     this.authenticationService
       .login(
-        this.loginFormGroup.get('email')?.value,
-        this.loginFormGroup.get('password')?.value
+        this.loginFormGroup.get('email')!.value,
+        this.loginFormGroup.get('password')!.value
       )
-      .pipe(first())
       .subscribe({
         next: () => {
           this.loading = false;
@@ -48,9 +43,9 @@ export class LoginComponent implements OnInit {
             this.route.snapshot.queryParams['returnUrl'] ?? '/events';
           this.router.navigate([returnUrl]);
         },
-        error: (error) => {
+        error: () => {
           this.loading = false;
-          this.error = { code: 500 };
+          this.error = true;
         },
       });
   }
