@@ -1,19 +1,9 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using shortid;
-using shortid.Configuration;
-using Webapi.Models.Identity;
+using Webapi.Models.Signups;
 
 namespace Webapi.Models.Events;
 
-public class Event
+public class Event : EditableEntity
 {
-  [Key]
-  [DatabaseGenerated(DatabaseGeneratedOption.None)]
-  public string Id { get; set; }
-
-  public DateTime CreatedAt { get; set; }
-
   public string Title { get; set; }
 
   public string? Description { get; set; }
@@ -26,34 +16,33 @@ public class Event
 
   public string? Location { get; set; }
 
-  public string? Notes { get; set; }
+  public List<Signup> Signups { get; set; }
 
-  public List<WebapiUser> Owners { get; set; }
-
-  public List<SignUp> SignUps { get; set; }
-
-  public Event()
+  public Event() : base()
   {
-    this.Id = ShortId.Generate(ShortIdOptions);
     this.Title = string.Empty;
-    this.Owners = new List<WebapiUser>();
-    this.SignUps = new List<SignUp>();
+    this.Signups = new List<Signup>();
   }
 
-  public Event(EventCreateDto eventCreateDto, WebapiUser owner, List<SignUp>? signUps = null)
+  public Event(EventCreateDto eventCreateDto) : base()
   {
-    this.Id = ShortId.Generate(ShortIdOptions);
+    this.CreatedBy = eventCreateDto.CreatedBy;
     this.Title = eventCreateDto.Title;
     this.Description = eventCreateDto.Description;
     this.Start = eventCreateDto.Start;
     this.End = eventCreateDto.End;
     this.Category = eventCreateDto.Category;
     this.Location = eventCreateDto.Location;
-    this.Notes = eventCreateDto.Notes;
-    this.Owners = new List<WebapiUser> { owner };
-    this.SignUps = signUps ?? new List<SignUp>();
+    this.Signups = new List<Signup>();
   }
 
-  private static readonly GenerationOptions ShortIdOptions =
-    new(useNumbers: true, useSpecialCharacters: false, length: 10);
+  public void Update(EventUpdateDto eventUpdateDto)
+  {
+    this.Title = eventUpdateDto.Title;
+    this.Description = eventUpdateDto.Description;
+    this.Start = eventUpdateDto.Start;
+    this.End = eventUpdateDto.End;
+    this.Category = eventUpdateDto.Category;
+    this.Location = eventUpdateDto.Location;
+  }
 }

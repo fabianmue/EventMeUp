@@ -1,19 +1,16 @@
 using System.Reflection;
-using System.Text;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Webapi.DatabaseContext;
-using Webapi.Models.Identity;
+using Webapi.Repositories.Comments;
 using Webapi.Repositories.Events;
+using Webapi.Repositories.Signups;
 using Webapi.ServiceProviderExtensions;
-using Webapi.Services.Events;
+using Webapi.Services.Signups;
 
 var allowCorsLocalhost = "allowCorsLocalhost";
 
@@ -28,38 +25,10 @@ builder.Services.AddDbContext<WebapiContext>(options =>
   string connectionString = builder.Configuration.GetValue<string>("WEBAPI_CONNECTIONSTRING");
   options.UseNpgsql(connectionString);
 });
-builder.Services
-  .AddIdentity<WebapiUser, IdentityRole>(options =>
-  {
-    options.User.RequireUniqueEmail = true;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 8;
-  })
-  .AddEntityFrameworkStores<WebapiContext>()
-  .AddDefaultTokenProviders();
-builder.Services
-  .AddAuthentication(options =>
-  {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-  })
-  .AddJwtBearer(options =>
-  {
-    options.SaveToken = true;
-    options.RequireHttpsMetadata = false;
-    options.TokenValidationParameters = new TokenValidationParameters()
-    {
-      ValidateIssuer = true,
-      ValidateAudience = true,
-      ValidAudience = builder.Configuration["JWT:ValidAudience"],
-      ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-      IssuerSigningKey = new SymmetricSecurityKey(
-        Encoding.UTF8.GetBytes(builder.Configuration["JWT_SECRET"]))
-    };
-  });
 builder.Services.AddScoped<IEventRepository, EventRepository>();
-builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<ISignupRepository, SignupRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<ISignupService, SignupService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(configuration =>
 {
@@ -74,23 +43,6 @@ builder.Services.AddSwaggerGen(configuration =>
       Name = "fabianmue"
     }
   });
-  var securityScheme = new OpenApiSecurityScheme
-  {
-    Name = "Authorization",
-    BearerFormat = "JWT",
-    Scheme = "Bearer",
-    Description = "Enter the token.",
-    In = ParameterLocation.Header,
-    Type = SecuritySchemeType.Http,
-    Reference = new OpenApiReference
-    {
-      Type = ReferenceType.SecurityScheme,
-      Id = "Bearer"
-    }
-  };
-  configuration.AddSecurityDefinition("Bearer", securityScheme);
-  configuration.AddSecurityRequirement(
-    new OpenApiSecurityRequirement { { securityScheme, Array.Empty<string>() } });
   configuration.IncludeXmlComments(Path.Combine(
     AppContext.BaseDirectory,
     $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"
@@ -132,7 +84,5 @@ if (app.Environment.IsEnvironment("Local"))
   app.UseCors(allowCorsLocalhost);
 }
 
-app.UseAuthentication();
-app.UseAuthorization();
 app.MapControllers();
 app.Run();

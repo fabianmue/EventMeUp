@@ -1,15 +1,17 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Webapi.Models.Comments;
 using Webapi.Models.Events;
-using Webapi.Models.Identity;
+using Webapi.Models.Signups;
 
 namespace Webapi.DatabaseContext;
 
-public class WebapiContext : IdentityDbContext<WebapiUser>
+public class WebapiContext : DbContext
 {
   public DbSet<Event> Events { get; set; } = default!;
 
-  public DbSet<SignUp> SignUps { get; set; } = default!;
+  public DbSet<Signup> Signups { get; set; } = default!;
+
+  public DbSet<Comment> Comments { get; set; } = default!;
 
   public WebapiContext() : base()
   {
@@ -28,10 +30,13 @@ public class WebapiContext : IdentityDbContext<WebapiUser>
   {
     base.OnModelCreating(modelBuilder);
     modelBuilder.Entity<Event>()
-      .Property(ev => ev.CreatedAt)
+      .Property(e => e.CreatedAt)
       .HasDefaultValueSql("now()");
-    modelBuilder.Entity<SignUp>()
-      .Property(ev => ev.CreatedAt)
+    modelBuilder.Entity<Signup>()
+      .Property(e => e.CreatedAt)
+      .HasDefaultValueSql("now()");
+    modelBuilder.Entity<Comment>()
+      .Property(e => e.CreatedAt)
       .HasDefaultValueSql("now()");
   }
 }

@@ -1,9 +1,7 @@
-using Webapi.Models.Signups;
-
 namespace Webapi.Models.Events;
 
 #pragma warning disable CS8618 // data transfer object
-public class EventDto : EditableDto
+public class EventUpdateDto
 {
   public string Title { get; set; }
 
@@ -16,6 +14,4 @@ public class EventDto : EditableDto
   public EventCategory? Category { get; set; }
 
   public string? Location { get; set; }
-
-  public List<SignupDto> Signups { get; set; }
 }

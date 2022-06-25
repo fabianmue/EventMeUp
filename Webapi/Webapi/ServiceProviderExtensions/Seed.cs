@@ -1,8 +1,8 @@
-using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Webapi.DatabaseContext;
+using Webapi.Models.Comments;
 using Webapi.Models.Events;
-using Webapi.Models.Identity;
+using Webapi.Models.Signups;
+using Webapi.Repositories.Events;
+using Webapi.Repositories.Signups;
 
 namespace Webapi.ServiceProviderExtensions;
 
@@ -10,112 +10,61 @@ public static partial class ServiceProviderExtensions
 {
   public static void Seed(this IServiceProvider serviceProvider)
   {
-    var context = serviceProvider.GetRequiredService<WebapiContext>();
-    var userManager = serviceProvider.GetRequiredService<UserManager<WebapiUser>>();
-    var mapper = serviceProvider.GetRequiredService<IMapper>();
+    var eventRepository = serviceProvider.GetRequiredService<IEventRepository>();
+    var signupRepository = serviceProvider.GetRequiredService<ISignupRepository>();
 
-    List<WebapiUser> createdUsers = SeedWebapiUsers(userManager, mapper, UserRegisterDtos);
-    List<SignUp> createdSignUps = SeedSignUps(context, SignUpCreateDtos, createdUsers);
-    List<Event> _ = SeedEvents(context, EventCreateDtos, createdSignUps, createdUsers);
-  }
-
-  private static List<WebapiUser> SeedWebapiUsers(
-    UserManager<WebapiUser> userManager,
-    IMapper mapper,
-    List<UserRegisterDto> userRegisterDtos)
-  {
-    if (userManager.Users.Any())
-    {
-      return new List<WebapiUser>();
-    }
-
-    // FIXME (fabianmue): find better way to asynchronously create users with usermanager
-    return userRegisterDtos
-      .Select(userRegisterDto =>
-      {
-        var user = mapper.Map<WebapiUser>(userRegisterDto);
-        var createResult = userManager.CreateAsync(user, userRegisterDto.Password).Result;
-        return (CreateResult: createResult, User: user);
-      })
-      .Where(userWithResult => userWithResult.CreateResult.Succeeded)
-      .Select(userWithResult => userWithResult.User)
-      .ToList();
-  }
-
-  private static List<SignUp> SeedSignUps(
-    WebapiContext context,
-    List<SignUpCreateDto> signUpCreateDtos,
-    List<WebapiUser> users
-  )
-  {
-    var signUps = signUpCreateDtos
-      .Select(signUpCreateDto =>
-      {
-        WebapiUser? matchingUser = signUpCreateDto.Email != null
-          ? users.FirstOrDefault(user => user.Email == signUpCreateDto.Email)
-          : null;
-        return new SignUp(signUpCreateDto, matchingUser);
-      })
-      .ToList();
-    context.SeedDbSet<SignUp>(signUps);
-    return signUps;
+    List<Event> createdEvents = SeedEvents(eventRepository, EventCreateDtos);
+    List<Signup> createdSignups = SeedSignups(eventRepository, SignupCreateDtos, createdEvents);
+    List<Comment> createdComments = SeedComments(signupRepository, CommentCreateDtos, createdSignups);
   }
 
   private static List<Event> SeedEvents(
-    WebapiContext context,
-    List<EventCreateDto> eventCreateDtos,
-    List<SignUp> signUps,
-    List<WebapiUser> users)
+    IEventRepository eventRepository,
+    List<EventCreateDto> eventCreateDtos)
   {
-    var random = new Random();
     List<Event> events = eventCreateDtos
-      .Select(eventCreateDto =>
-      {
-        WebapiUser owner = users.ElementAt(random.Next(users.Count));
-        return new Event(eventCreateDto, owner, signUps);
-      })
+      .Select(eventCreateDto => new Event(eventCreateDto))
       .ToList();
-    context.SeedDbSet<Event>(events);
+    eventRepository.AddRange(events);
+    eventRepository.SaveChanges();
     return events;
   }
 
-  private static void SeedDbSet<TEntity>(this WebapiContext context, IEnumerable<TEntity> range) where TEntity : class
+  private static List<Signup> SeedSignups(
+    IEventRepository eventRepository,
+    List<SignupCreateDto> signupCreateDtos,
+    List<Event> createdEvents
+  )
   {
-    var dbSet = context.Set<TEntity>();
-    if (dbSet.Any())
+    List<Signup> signups = signupCreateDtos
+      .Select(signUpCreateDto => new Signup(signUpCreateDto))
+      .ToList();
+    createdEvents.ForEach(ev =>
     {
-      return;
-    }
-
-    dbSet.AddRange(range);
-    context.SaveChanges();
+      ev.Signups.AddRange(signups);
+      eventRepository.Update(ev);
+    });
+    eventRepository.SaveChanges();
+    return signups;
   }
 
-  private static readonly List<UserRegisterDto> UserRegisterDtos = new()
+  private static List<Comment> SeedComments(
+    ISignupRepository signupRepository,
+    List<CommentCreateDto> commentCreateDtos,
+    List<Signup> createdSignups)
   {
-    new UserRegisterDto {
-      Email = "user@eventmeup.test",
-      Username = "Username",
-      Password = "EventMeUp123"
-    }
-  };
-
-  private static readonly List<SignUpCreateDto> SignUpCreateDtos = new()
-  {
-    new SignUpCreateDto
+    List<Comment> comments = commentCreateDtos
+      .Select(commentCreateDto => new Comment(commentCreateDto))
+      .ToList();
+    var random = new Random();
+    createdSignups.ForEach(signup =>
     {
-      Username = "Random person on the internet one",
-      AlsoKnownAs = "the stranger",
-      Status = SignUpStatus.Accepted
-    },
-    new SignUpCreateDto
-    {
-      Username = "Username",
-      AlsoKnownAs = "the registered",
-      Status = SignUpStatus.Accepted,
-      Email = "user@eventmeup.test"
-    }
-  };
+      signup.Comments.Add(comments[random.Next(comments.Count)]);
+      signupRepository.Update(signup);
+    });
+    signupRepository.SaveChanges();
+    return comments;
+  }
 
   private static readonly List<EventCreateDto> EventCreateDtos = new()
   {
@@ -125,7 +74,6 @@ public static partial class ServiceProviderExtensions
       Description = "It's all fun and games until...",
       Start = new DateTime(2022, 5, 24, 12, 0, 0).ToUniversalTime(),
       Category = EventCategory.Sports,
-      Notes = "Bring your own racket or rent one",
       Location = "Airgate, Oerlikon"
     },
     new EventCreateDto
@@ -134,7 +82,6 @@ public static partial class ServiceProviderExtensions
       Description = "Fool me once, shame on me. Fool me twice, shame on - wait, what?",
       Start = new DateTime(2022, 5, 31, 18, 30, 0).ToUniversalTime(),
       End = new DateTime(2022, 5, 31, 19, 15, 0).ToUniversalTime(),
-      Notes = "Bring your own racket",
       Location = "Vitis, Schlieren"
     },
     new EventCreateDto
@@ -163,6 +110,61 @@ public static partial class ServiceProviderExtensions
       End = new DateTime(2023, 01, 01, 2, 00, 0).ToUniversalTime(),
       Category = EventCategory.Social,
       Location = "WG SH South, Binz"
+    }
+  };
+
+  private static readonly List<SignupCreateDto> SignupCreateDtos = new()
+  {
+    new SignupCreateDto
+    {
+      CreatedBy = "Monica",
+      Status = SignupStatus.Accepted
+    },
+    new SignupCreateDto
+    {
+      CreatedBy = "Erica",
+      Status = SignupStatus.Tentative,
+    },
+    new SignupCreateDto
+    {
+      CreatedBy = "Rita",
+      Status = SignupStatus.Declined,
+    },
+    new SignupCreateDto
+    {
+      CreatedBy = "Tina",
+      Status = SignupStatus.Declined,
+    },
+    new SignupCreateDto
+    {
+      CreatedBy = "Sandra",
+      Status = SignupStatus.Accepted,
+    },
+    new SignupCreateDto
+    {
+      CreatedBy = "Mary",
+      Status = SignupStatus.Accepted,
+    },
+    new SignupCreateDto
+    {
+      CreatedBy = "Jessica",
+      Status = SignupStatus.Tentative,
+    }
+  };
+
+  private static readonly List<CommentCreateDto> CommentCreateDtos = new()
+  {
+    new CommentCreateDto
+    {
+      Text = "Can't make it before 14:00"
+    },
+    new CommentCreateDto
+    {
+      Text = "Propose to reschedule the week after"
+    },
+    new CommentCreateDto
+    {
+      Text = "Great event, love it!"
     }
   };
 }
