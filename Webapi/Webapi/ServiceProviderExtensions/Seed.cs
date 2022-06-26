@@ -15,7 +15,7 @@ public static partial class ServiceProviderExtensions
 
     List<Event> createdEvents = SeedEvents(eventRepository, EventCreateDtos);
     List<Signup> createdSignups = SeedSignups(eventRepository, SignupCreateDtos, createdEvents);
-    List<Comment> createdComments = SeedComments(signupRepository, CommentCreateDtos, createdSignups);
+    List<Comment> _ = SeedComments(signupRepository, CommentCreateDtos, createdSignups);
   }
 
   private static List<Event> SeedEvents(
@@ -70,6 +70,7 @@ public static partial class ServiceProviderExtensions
   {
     new EventCreateDto
     {
+      CreatedBy = "Mambo",
       Title = "Squash - blood sweat and tears (of joy!)",
       Description = "It's all fun and games until...",
       Start = new DateTime(2022, 5, 24, 12, 0, 0).ToUniversalTime(),
@@ -78,6 +79,7 @@ public static partial class ServiceProviderExtensions
     },
     new EventCreateDto
     {
+      CreatedBy = "Mambo",
       Title = "Squash - the sweet squashvenge",
       Description = "Fool me once, shame on me. Fool me twice, shame on - wait, what?",
       Start = new DateTime(2022, 5, 31, 18, 30, 0).ToUniversalTime(),
@@ -86,6 +88,7 @@ public static partial class ServiceProviderExtensions
     },
     new EventCreateDto
     {
+      CreatedBy = "Mambo",
       Title = "Signature gathering",
       Description = "Everything for the dachshund, everything for the club.",
       Start = new DateTime(2022, 08, 06, 11, 30, 0).ToUniversalTime(),
@@ -95,6 +98,7 @@ public static partial class ServiceProviderExtensions
     },
     new EventCreateDto
     {
+      CreatedBy = "Mambo",
       Title = "THE Party",
       Description = "Not just any party - THE party!",
       Start = new DateTime(2022, 08, 06, 19, 30, 0).ToUniversalTime(),
@@ -104,6 +108,7 @@ public static partial class ServiceProviderExtensions
     },
     new EventCreateDto
     {
+      CreatedBy = "Mambo",
       Title = "New years eve",
       Description = "This gon' be gud",
       Start = new DateTime(2022, 12, 31, 22, 0, 0).ToUniversalTime(),

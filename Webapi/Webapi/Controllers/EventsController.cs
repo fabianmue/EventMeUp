@@ -8,22 +8,18 @@ namespace Webapi.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class EventController : ControllerBase
+public class EventsController : ControllerBase
 {
   private readonly IEventRepository _eventRepository;
 
   private readonly IMapper _mapper;
 
-  private readonly ILogger<EventController> _logger;
-
-  public EventController(
+  public EventsController(
     IEventRepository eventRepository,
-    IMapper mapper,
-    ILogger<EventController> logger)
+    IMapper mapper)
   {
     this._eventRepository = eventRepository;
     this._mapper = mapper;
-    this._logger = logger;
   }
 
   [HttpGet("{eventId}")]
@@ -54,12 +50,13 @@ public class EventController : ControllerBase
     this._eventRepository.Add(ev);
     await this._eventRepository.SaveChangesAsync();
     return this.Created(
-      $"{ev.Id}?editToken={ev.EditToken}",
+      $"Events/{ev.Id}?editToken={ev.EditToken}",
       this._mapper.Map<EventDto>(ev)
     );
   }
 
   [HttpPut("{eventId}")]
+  [Consumes(MediaTypeNames.Application.Json)]
   [Produces(MediaTypeNames.Application.Json)]
   [ProducesResponseType(StatusCodes.Status200OK)]
   [ProducesResponseType(StatusCodes.Status401Unauthorized)]

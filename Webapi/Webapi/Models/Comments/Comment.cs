@@ -13,4 +13,9 @@ public class Comment : BaseEntity
   {
     this.Text = commentCreateDto.Text;
   }
+
+  public void Update(CommentUpdateDto commentUpdateDto)
+  {
+    this.Text = commentUpdateDto.Text;
+  }
 }

@@ -11,7 +11,7 @@ import { map, filter } from 'rxjs/operators';
 
 import { EventCreateDto } from '../models/event-create-dto';
 import { EventDto } from '../models/event-dto';
-import { SignUpCreateDto } from '../models/sign-up-create-dto';
+import { EventUpdateDto } from '../models/event-update-dto';
 
 @Injectable({
   providedIn: 'root',
@@ -22,92 +22,6 @@ export class EventsService extends BaseService {
     http: HttpClient
   ) {
     super(config, http);
-  }
-
-  /**
-   * Path part for operation eventsGetAllMyOwnedEvents
-   */
-  static readonly EventsGetAllMyOwnedEventsPath = '/Events/owned';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `eventsGetAllMyOwnedEvents()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  eventsGetAllMyOwnedEvents$Response(params?: {
-  }): Observable<StrictHttpResponse<Array<EventDto>>> {
-
-    const rb = new RequestBuilder(this.rootUrl, EventsService.EventsGetAllMyOwnedEventsPath, 'get');
-    if (params) {
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<EventDto>>;
-      })
-    );
-  }
-
-  /**
-   * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `eventsGetAllMyOwnedEvents$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  eventsGetAllMyOwnedEvents(params?: {
-  }): Observable<Array<EventDto>> {
-
-    return this.eventsGetAllMyOwnedEvents$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<EventDto>>) => r.body as Array<EventDto>)
-    );
-  }
-
-  /**
-   * Path part for operation eventsGetAllMySignedUpEvents
-   */
-  static readonly EventsGetAllMySignedUpEventsPath = '/Events/signedup';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `eventsGetAllMySignedUpEvents()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  eventsGetAllMySignedUpEvents$Response(params?: {
-  }): Observable<StrictHttpResponse<Array<EventDto>>> {
-
-    const rb = new RequestBuilder(this.rootUrl, EventsService.EventsGetAllMySignedUpEventsPath, 'get');
-    if (params) {
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<EventDto>>;
-      })
-    );
-  }
-
-  /**
-   * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `eventsGetAllMySignedUpEvents$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  eventsGetAllMySignedUpEvents(params?: {
-  }): Observable<Array<EventDto>> {
-
-    return this.eventsGetAllMySignedUpEvents$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<EventDto>>) => r.body as Array<EventDto>)
-    );
   }
 
   /**
@@ -157,74 +71,32 @@ export class EventsService extends BaseService {
   }
 
   /**
-   * Path part for operation eventsAddEventSignUp
+   * Path part for operation eventsUpdateEvent
    */
-  static readonly EventsAddEventSignUpPath = '/Events/{eventId}';
+  static readonly EventsUpdateEventPath = '/Events/{eventId}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `eventsAddEventSignUp$Plain()` instead.
+   * To access only the response body, use `eventsUpdateEvent()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  eventsAddEventSignUp$Plain$Response(params: {
+  eventsUpdateEvent$Response(params: {
     eventId: string;
-    body?: SignUpCreateDto
+    editToken?: string;
+    body?: EventUpdateDto
   }): Observable<StrictHttpResponse<EventDto>> {
 
-    const rb = new RequestBuilder(this.rootUrl, EventsService.EventsAddEventSignUpPath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, EventsService.EventsUpdateEventPath, 'put');
     if (params) {
       rb.path('eventId', params.eventId, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: 'text/plain'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<EventDto>;
-      })
-    );
-  }
-
-  /**
-   * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `eventsAddEventSignUp$Plain$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  eventsAddEventSignUp$Plain(params: {
-    eventId: string;
-    body?: SignUpCreateDto
-  }): Observable<EventDto> {
-
-    return this.eventsAddEventSignUp$Plain$Response(params).pipe(
-      map((r: StrictHttpResponse<EventDto>) => r.body as EventDto)
-    );
-  }
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `eventsAddEventSignUp$Json()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  eventsAddEventSignUp$Json$Response(params: {
-    eventId: string;
-    body?: SignUpCreateDto
-  }): Observable<StrictHttpResponse<EventDto>> {
-
-    const rb = new RequestBuilder(this.rootUrl, EventsService.EventsAddEventSignUpPath, 'post');
-    if (params) {
-      rb.path('eventId', params.eventId, {});
+      rb.query('editToken', params.editToken, {});
       rb.body(params.body, 'application/json');
     }
 
     return this.http.request(rb.build({
       responseType: 'json',
-      accept: 'text/json'
+      accept: 'application/json'
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
@@ -235,17 +107,67 @@ export class EventsService extends BaseService {
 
   /**
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `eventsAddEventSignUp$Json$Response()` instead.
+   * To access the full response (for headers, for example), `eventsUpdateEvent$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  eventsAddEventSignUp$Json(params: {
+  eventsUpdateEvent(params: {
     eventId: string;
-    body?: SignUpCreateDto
+    editToken?: string;
+    body?: EventUpdateDto
   }): Observable<EventDto> {
 
-    return this.eventsAddEventSignUp$Json$Response(params).pipe(
+    return this.eventsUpdateEvent$Response(params).pipe(
       map((r: StrictHttpResponse<EventDto>) => r.body as EventDto)
+    );
+  }
+
+  /**
+   * Path part for operation eventsDeleteEvent
+   */
+  static readonly EventsDeleteEventPath = '/Events/{eventId}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `eventsDeleteEvent()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  eventsDeleteEvent$Response(params: {
+    eventId: string;
+    editToken?: string;
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, EventsService.EventsDeleteEventPath, 'delete');
+    if (params) {
+      rb.path('eventId', params.eventId, {});
+      rb.query('editToken', params.editToken, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `eventsDeleteEvent$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  eventsDeleteEvent(params: {
+    eventId: string;
+    editToken?: string;
+  }): Observable<void> {
+
+    return this.eventsDeleteEvent$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }
 

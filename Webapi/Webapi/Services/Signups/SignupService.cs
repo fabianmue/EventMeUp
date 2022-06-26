@@ -19,33 +19,35 @@ public class SignupService : ISignupService
     this._signupRepository = signupRepository;
   }
 
-  public async Task<Event?> AddSignupAsync(SignupCreateDto signupCreateDto)
+  public async Task<Signup?> AddSignupAsync(string eventId, SignupCreateDto signupCreateDto)
   {
     Event? ev = this._eventRepository
-      .Find(ev => ev.Id == signupCreateDto.EventId);
+      .Find(ev => ev.Id == eventId);
     if (ev == null)
     {
       return null;
     }
 
-    ev.Signups.Add(new Signup(signupCreateDto));
+    var signup = new Signup(signupCreateDto);
+    ev.Signups.Add(signup);
     this._eventRepository.Update(ev);
     await this._eventRepository.SaveChangesAsync();
-    return ev;
+    return signup;
   }
 
-  public async Task<Signup?> AddCommentAsync(CommentCreateDto commentCreateDto)
+  public async Task<Comment?> AddCommentAsync(string signupId, CommentCreateDto commentCreateDto)
   {
     Signup? signup = this._signupRepository
-      .Find(signup => signup.Id == commentCreateDto.SignupId);
+      .Find(signup => signup.Id == signupId);
     if (signup == null)
     {
       return null;
     }
 
-    signup.Comments.Add(new Comment(commentCreateDto));
+    var comment = new Comment(commentCreateDto);
+    signup.Comments.Add(comment);
     this._signupRepository.Update(signup);
     await this._signupRepository.SaveChangesAsync();
-    return signup;
+    return comment;
   }
 }

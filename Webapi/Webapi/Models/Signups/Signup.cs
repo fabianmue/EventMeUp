@@ -19,4 +19,9 @@ public class Signup : EditableEntity
     this.Status = signupCreateDto.Status;
     this.Comments = new List<Comment>();
   }
+
+  public void Update(SignupUpdateDto signupUpdateDto)
+  {
+    this.Status = signupUpdateDto.Status;
+  }
 }

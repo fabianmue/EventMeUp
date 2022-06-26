@@ -4,8 +4,9 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
+import { CommentsService } from './services/comments.service';
 import { EventsService } from './services/events.service';
-import { IdentityService } from './services/identity.service';
+import { SignupsService } from './services/signups.service';
 
 /**
  * Module that provides all services and configuration.
@@ -15,8 +16,9 @@ import { IdentityService } from './services/identity.service';
   exports: [],
   declarations: [],
   providers: [
+    CommentsService,
     EventsService,
-    IdentityService,
+    SignupsService,
     ApiConfiguration
   ],
 })
