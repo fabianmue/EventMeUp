@@ -22,6 +22,11 @@ public class EntityRepository<T> : IEntityRepository<T> where T : BaseEntity
     return this._dbSet.SingleOrDefault(expression);
   }
 
+  public virtual IQueryable<T> FindAll(Expression<Func<T, bool>> expression)
+  {
+    return this._dbSet.Where(expression);
+  }
+
   public virtual async Task<T?> FindAsync(Expression<Func<T, bool>> expression)
   {
     return await this._dbSet.SingleOrDefaultAsync(expression);

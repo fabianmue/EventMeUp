@@ -6,6 +6,8 @@ public interface IEntityRepository<T>
 {
   T? Find(Expression<Func<T, bool>> expression);
 
+  IQueryable<T> FindAll(Expression<Func<T, bool>> expression);
+
   Task<T?> FindAsync(Expression<Func<T, bool>> expression);
 
   void Add(T entity);

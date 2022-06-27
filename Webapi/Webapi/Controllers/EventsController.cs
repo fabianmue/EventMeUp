@@ -26,7 +26,7 @@ public class EventsController : ControllerBase
   [Produces(MediaTypeNames.Application.Json)]
   [ProducesResponseType(StatusCodes.Status200OK)]
   [ProducesResponseType(StatusCodes.Status404NotFound)]
-  public async Task<ActionResult<EventDto>> GetEvent(
+  public async Task<ActionResult<EventDto>> GetEventById(
     [FromRoute] string eventId)
   {
     Event? ev = await this._eventRepository
@@ -37,6 +37,18 @@ public class EventsController : ControllerBase
     }
 
     return this.Ok(this._mapper.Map<EventDto>(ev));
+  }
+
+  [HttpPost("ids")]
+  [Consumes(MediaTypeNames.Application.Json)]
+  [Produces(MediaTypeNames.Application.Json)]
+  [ProducesResponseType(StatusCodes.Status200OK)]
+  public ActionResult<List<EventDto>> GetEventsByIds(
+    [FromBody] IEnumerable<string> eventIds)
+  {
+    IEnumerable<Event> events = this._eventRepository
+      .FindAll(ev => eventIds.Contains(ev.Id));
+    return this.Ok(this._mapper.Map<IEnumerable<EventDto>>(events));
   }
 
   [HttpPost]
