@@ -2,7 +2,6 @@ using Webapi.Models.Comments;
 using Webapi.Models.Events;
 using Webapi.Models.Signups;
 using Webapi.Repositories.Events;
-using Webapi.Repositories.Signups;
 
 namespace Webapi.ServiceProviderExtensions;
 
@@ -11,11 +10,10 @@ public static partial class ServiceProviderExtensions
   public static void Seed(this IServiceProvider serviceProvider)
   {
     var eventRepository = serviceProvider.GetRequiredService<IEventRepository>();
-    var signupRepository = serviceProvider.GetRequiredService<ISignupRepository>();
 
     List<Event> createdEvents = SeedEvents(eventRepository, EventCreateDtos);
-    List<Signup> createdSignups = SeedSignups(eventRepository, SignupCreateDtos, createdEvents);
-    List<Comment> _ = SeedComments(signupRepository, CommentCreateDtos, createdSignups);
+    SeedSignups(eventRepository, SignupCreateDtos, createdEvents);
+    SeedComments(eventRepository, CommentCreateDtos, createdEvents);
   }
 
   private static List<Event> SeedEvents(
@@ -23,47 +21,49 @@ public static partial class ServiceProviderExtensions
     List<EventCreateDto> eventCreateDtos)
   {
     List<Event> events = eventCreateDtos
-      .Select(eventCreateDto => new Event(eventCreateDto))
+      .Select((eventCreateDto, index) => new Event(eventCreateDto)
+      {
+        Id = index.ToString()
+      })
       .ToList();
     eventRepository.AddRange(events);
     eventRepository.SaveChanges();
     return events;
   }
 
-  private static List<Signup> SeedSignups(
+  private static void SeedSignups(
     IEventRepository eventRepository,
     List<SignupCreateDto> signupCreateDtos,
     List<Event> createdEvents
   )
   {
-    List<Signup> signups = signupCreateDtos
-      .Select(signUpCreateDto => new Signup(signUpCreateDto))
-      .ToList();
     createdEvents.ForEach(ev =>
     {
+      IEnumerable<Signup> signups = signupCreateDtos
+        .Select(signUpCreateDto => new Signup(signUpCreateDto));
       ev.Signups.AddRange(signups);
       eventRepository.Update(ev);
     });
     eventRepository.SaveChanges();
-    return signups;
   }
 
-  private static List<Comment> SeedComments(
-    ISignupRepository signupRepository,
+  private static void SeedComments(
+    IEventRepository eventRepository,
     List<CommentCreateDto> commentCreateDtos,
-    List<Signup> createdSignups)
+    List<Event> createdEvents)
   {
-    List<Comment> comments = commentCreateDtos
-      .Select(commentCreateDto => new Comment(commentCreateDto))
-      .ToList();
     var random = new Random();
-    createdSignups.ForEach(signup =>
+    createdEvents.ForEach(ev =>
     {
-      signup.Comments.Add(comments[random.Next(comments.Count)]);
-      signupRepository.Update(signup);
+      ev.Signups.ForEach(signup =>
+      {
+        var comment = new Comment(
+          commentCreateDtos[random.Next(commentCreateDtos.Count)]);
+        signup.Comments.Add(comment);
+      });
+      eventRepository.Update(ev);
     });
-    signupRepository.SaveChanges();
-    return comments;
+    eventRepository.SaveChanges();
   }
 
   private static readonly List<EventCreateDto> EventCreateDtos = new()
