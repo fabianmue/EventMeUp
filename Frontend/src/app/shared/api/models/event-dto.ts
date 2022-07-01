@@ -8,6 +8,7 @@ export interface EventDto {
   createdBy?: null | string;
   description?: null | string;
   end?: null | string;
+  id?: null | string;
   location?: null | string;
   signups?: null | Array<SignupDto>;
   start?: string;

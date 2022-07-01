@@ -6,5 +6,6 @@ export interface SignupDto {
   comments?: null | Array<CommentDto>;
   createdAt?: string;
   createdBy?: null | string;
+  id?: null | string;
   status?: SignupStatus;
 }
