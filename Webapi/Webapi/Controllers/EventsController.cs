@@ -62,8 +62,8 @@ public class EventsController : ControllerBase
     this._eventRepository.Add(ev);
     await this._eventRepository.SaveChangesAsync();
     return this.Created(
-      $"Events/{ev.Id}?editToken={ev.EditToken}",
-      this._mapper.Map<EventDto>(ev)
+      $"Events/{ev.Id}",
+      (Event: this._mapper.Map<EventDto>(ev), ev.EditToken)
     );
   }
 

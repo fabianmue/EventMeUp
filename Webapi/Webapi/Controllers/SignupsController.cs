@@ -43,8 +43,8 @@ public class SignupsController : ControllerBase
     }
 
     return this.Created(
-      $"Events/{eventId}/Signups/{signup.Id}?editToken={signup.EditToken}",
-      this._mapper.Map<SignupDto>(signup)
+      $"Events/{eventId}/Signups/{signup.Id}",
+      (Signup: this._mapper.Map<SignupDto>(signup), signup.EditToken)
     );
   }
 
