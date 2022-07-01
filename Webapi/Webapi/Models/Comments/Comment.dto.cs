@@ -4,4 +4,6 @@ namespace Webapi.Models.Comments;
 public class CommentDto : BaseDto
 {
   public string Text { get; set; }
+
+  public bool Edited { get; set; }
 }

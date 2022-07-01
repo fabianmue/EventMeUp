@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Webapi.DatabaseContext;
@@ -11,9 +12,10 @@ using Webapi.DatabaseContext;
 namespace Webapi.Migrations
 {
     [DbContext(typeof(WebapiContext))]
-    partial class WebapiContextModelSnapshot : ModelSnapshot
+    [Migration("20220701194753_AddCommentEdited")]
+    partial class AddCommentEdited
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
