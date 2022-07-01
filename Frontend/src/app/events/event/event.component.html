@@ -1,0 +1,12 @@
+<div class="event-container">
+  <button mat-button (click)="toggleEdit()">Toggle edit</button>
+  <app-event-form
+    *ngIf="event$ | async as event; else noEvent"
+    [event]="event"
+    [edit]="(edit$ | async) ?? false"
+  >
+  </app-event-form>
+  <ng-template #noEvent>
+    <div>Error</div>
+  </ng-template>
+</div>

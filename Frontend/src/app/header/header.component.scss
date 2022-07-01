@@ -16,20 +16,6 @@
     flex: 1 1 auto;
   }
 
-  .login,
-  .logout {
-    height: calc(100% - 10px);
-    display: flex;
-    align-items: center;
-    padding: 0 8px;
-    font-size: var(--font-size-large);
-    cursor: pointer;
-
-    .icon {
-      margin-left: 8px;
-    }
-  }
-
   a,
   a:link,
   a:visited,

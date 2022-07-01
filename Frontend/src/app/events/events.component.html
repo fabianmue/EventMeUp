@@ -3,22 +3,22 @@
     <mat-tab label="My Events">
       <div class="tab-container">
         <a
-          *ngFor="let owned of owned$ | async"
+          *ngFor="let myEvent of myEvents$ | async"
           class="event-preview"
-          [href]="owned.id"
+          [href]="myEvent.event.id"
         >
-          <app-event-preview [event]="owned"></app-event-preview>
+          <app-event-preview [event]="myEvent.event"></app-event-preview>
         </a>
       </div>
     </mat-tab>
     <mat-tab label="My Signups">
       <div class="tab-container">
         <a
-          *ngFor="let signedUp of signedUp$ | async"
+          *ngFor="let mySignup of mySignups$ | async"
           class="event-preview"
-          [href]="signedUp.id"
+          [href]="mySignup.event.id"
         >
-          <app-event-preview [event]="signedUp"></app-event-preview>
+          <app-event-preview [event]="mySignup.event"></app-event-preview>
         </a>
       </div>
     </mat-tab>

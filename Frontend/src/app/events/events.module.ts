@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
 
 import { SharedModule } from '../shared/shared.module';
 import { EventsComponent } from './events.component';
-
-const routes: Routes = [{ path: '', component: EventsComponent }];
+import { EventComponent } from './event/event.component';
+import { CreateEventComponent } from './create-event/create-event.component';
+import { EventsRoutingModule } from './events-routing.module';
 
 @NgModule({
-  imports: [SharedModule, RouterModule.forChild(routes), MatTabsModule],
-  declarations: [EventsComponent],
+  imports: [SharedModule, EventsRoutingModule, MatTabsModule],
+  declarations: [EventsComponent, EventComponent, CreateEventComponent],
 })
 export class MyEventsModule {}

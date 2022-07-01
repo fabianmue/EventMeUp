@@ -1,0 +1,5 @@
+<mat-card class="event-form-container">
+  <form [formGroup]="eventForm" (submit)="submitForm()"></form>
+  <span>title: {{ event?.title }}</span>
+  <span>eventForm.enabled: {{ eventForm.enabled }}</span>
+</mat-card>

@@ -1,28 +1,16 @@
 <div class="welcome-container">
-  <span *ngIf="username$ | async as username; else noUsername" class="title">
-    Welcome, {{ username }}!
+  <span class="title">Welcome!</span>
+  <span>
+    EventMeUp is a free, easy to use app to create events, sign up for them and
+    share them with your friends.
   </span>
-  <ng-template #noUsername><span class="title">Welcome!</span></ng-template>
-  <span
-    >EventMeUp is a free, easy to use app to create events and share them with
-    your friends.
-  </span>
-  <div *ngIf="loggedIn$ | async; else notLoggedIn" class="from-here">
+  <div class="from-here">
     <span>From here, you may </span>
     <a href="/events">check your events</a>
+    <span>, </span>
+    <a href="/events/create">create an event</a>
     <span> or </span>
     <a href="/about">learn more about the project</a>
     <span>.</span>
   </div>
-  <ng-template #notLoggedIn>
-    <div class="from-here">
-      <span>From here, you may </span>
-      <a href="/login">login</a>
-      <span>, </span>
-      <a href="/register">register</a>
-      <span> or </span>
-      <a href="/about">learn more about the project</a>
-      <span>.</span>
-    </div>
-  </ng-template>
 </div>

@@ -1,6 +1,6 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 
-import { EventDto, SignUpStatus } from '../../api/models';
+import { EventDto, SignupStatus } from '../../api/models';
 
 @Component({
   selector: 'app-event-preview',
@@ -12,23 +12,23 @@ export class EventPreviewComponent {
   @Input() event!: EventDto;
 
   get accepted(): number {
-    return this.getStatusCount(SignUpStatus.Accepted);
+    return this.getStatusCount(SignupStatus.Accepted);
   }
 
   get tentative(): number {
-    return this.getStatusCount(SignUpStatus.Tentative);
+    return this.getStatusCount(SignupStatus.Tentative);
   }
 
   get declined(): number {
-    return this.getStatusCount(SignUpStatus.Declined);
+    return this.getStatusCount(SignupStatus.Declined);
   }
 
-  private getStatusCount(status: SignUpStatus): number {
-    if (!this.event?.signUps) {
+  private getStatusCount(status: SignupStatus): number {
+    if (!this.event?.signups) {
       return 0;
     }
 
-    return this.event.signUps.filter((signUp) => signUp.status === status)
+    return this.event.signups.filter((signup) => signup.status === status)
       .length;
   }
 }
