@@ -11,6 +11,7 @@ import { map, filter } from 'rxjs/operators';
 
 import { EventCreateDto } from '../models/event-create-dto';
 import { EventDto } from '../models/event-dto';
+import { EventDtoStringTuple } from '../models/event-dto-string-tuple';
 import { EventUpdateDto } from '../models/event-update-dto';
 
 @Injectable({
@@ -230,7 +231,7 @@ export class EventsService extends BaseService {
    */
   eventsCreateEvent$Response(params?: {
     body?: EventCreateDto
-  }): Observable<StrictHttpResponse<EventDto>> {
+  }): Observable<StrictHttpResponse<EventDtoStringTuple>> {
 
     const rb = new RequestBuilder(this.rootUrl, EventsService.EventsCreateEventPath, 'post');
     if (params) {
@@ -243,7 +244,7 @@ export class EventsService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<EventDto>;
+        return r as StrictHttpResponse<EventDtoStringTuple>;
       })
     );
   }
@@ -256,10 +257,10 @@ export class EventsService extends BaseService {
    */
   eventsCreateEvent(params?: {
     body?: EventCreateDto
-  }): Observable<EventDto> {
+  }): Observable<EventDtoStringTuple> {
 
     return this.eventsCreateEvent$Response(params).pipe(
-      map((r: StrictHttpResponse<EventDto>) => r.body as EventDto)
+      map((r: StrictHttpResponse<EventDtoStringTuple>) => r.body as EventDtoStringTuple)
     );
   }
 

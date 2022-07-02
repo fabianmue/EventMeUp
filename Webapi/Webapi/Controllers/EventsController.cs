@@ -55,7 +55,7 @@ public class EventsController : ControllerBase
   [Consumes(MediaTypeNames.Application.Json)]
   [Produces(MediaTypeNames.Application.Json)]
   [ProducesResponseType(StatusCodes.Status201Created)]
-  public async Task<ActionResult<EventDto>> CreateEvent(
+  public async Task<ActionResult<Tuple<EventDto, string>>> CreateEvent(
     [FromBody] EventCreateDto eventCreateDto)
   {
     var ev = new Event(eventCreateDto);
@@ -63,7 +63,7 @@ public class EventsController : ControllerBase
     await this._eventRepository.SaveChangesAsync();
     return this.Created(
       $"Events/{ev.Id}",
-      (Event: this._mapper.Map<EventDto>(ev), ev.EditToken)
+      (this._mapper.Map<EventDto>(ev), ev.EditToken)
     );
   }
 

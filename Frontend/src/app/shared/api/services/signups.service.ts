@@ -11,6 +11,7 @@ import { map, filter } from 'rxjs/operators';
 
 import { SignupCreateDto } from '../models/signup-create-dto';
 import { SignupDto } from '../models/signup-dto';
+import { SignupDtoStringTuple } from '../models/signup-dto-string-tuple';
 import { SignupUpdateDto } from '../models/signup-update-dto';
 
 @Injectable({
@@ -38,7 +39,7 @@ export class SignupsService extends BaseService {
   signupsCreateSignup$Response(params: {
     eventId: string;
     body?: SignupCreateDto
-  }): Observable<StrictHttpResponse<SignupDto>> {
+  }): Observable<StrictHttpResponse<SignupDtoStringTuple>> {
 
     const rb = new RequestBuilder(this.rootUrl, SignupsService.SignupsCreateSignupPath, 'post');
     if (params) {
@@ -52,7 +53,7 @@ export class SignupsService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<SignupDto>;
+        return r as StrictHttpResponse<SignupDtoStringTuple>;
       })
     );
   }
@@ -66,10 +67,10 @@ export class SignupsService extends BaseService {
   signupsCreateSignup(params: {
     eventId: string;
     body?: SignupCreateDto
-  }): Observable<SignupDto> {
+  }): Observable<SignupDtoStringTuple> {
 
     return this.signupsCreateSignup$Response(params).pipe(
-      map((r: StrictHttpResponse<SignupDto>) => r.body as SignupDto)
+      map((r: StrictHttpResponse<SignupDtoStringTuple>) => r.body as SignupDtoStringTuple)
     );
   }
 

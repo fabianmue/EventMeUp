@@ -31,7 +31,7 @@ public class SignupsController : ControllerBase
   [Consumes(MediaTypeNames.Application.Json)]
   [Produces(MediaTypeNames.Application.Json)]
   [ProducesResponseType(StatusCodes.Status201Created)]
-  public async Task<ActionResult<SignupDto>> CreateSignup(
+  public async Task<ActionResult<Tuple<SignupDto, string>>> CreateSignup(
     [FromRoute] string eventId,
     [FromBody] SignupCreateDto signupCreateDto)
   {
@@ -44,7 +44,7 @@ public class SignupsController : ControllerBase
 
     return this.Created(
       $"Events/{eventId}/Signups/{signup.Id}",
-      (Signup: this._mapper.Map<SignupDto>(signup), signup.EditToken)
+      (this._mapper.Map<SignupDto>(signup), signup.EditToken)
     );
   }
 
