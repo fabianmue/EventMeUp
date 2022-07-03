@@ -6,6 +6,6 @@ export enum EventCategory {
   Music = 'Music',
   Food = 'Food',
   Fashion = 'Fashion',
-  Political = 'Political',
+  Politics = 'Politics',
   Corporate = 'Corporate'
 }
