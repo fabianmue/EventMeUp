@@ -5,7 +5,10 @@
         <a
           *ngFor="let myEvent of myEvents$ | async"
           class="event-preview"
-          [href]="myEvent.event.id"
+          [routerLink]="myEvent.event.id"
+          [queryParams]="
+            myEvent.editToken ? { eventEditToken: myEvent.editToken } : null
+          "
         >
           <app-event-preview [event]="myEvent.event"></app-event-preview>
         </a>
@@ -16,7 +19,10 @@
         <a
           *ngFor="let mySignup of mySignups$ | async"
           class="event-preview"
-          [href]="mySignup.event.id"
+          [routerLink]="mySignup.event.id"
+          [queryParams]="
+            mySignup.editToken ? { signupEditToken: mySignup.editToken } : null
+          "
         >
           <app-event-preview [event]="mySignup.event"></app-event-preview>
         </a>

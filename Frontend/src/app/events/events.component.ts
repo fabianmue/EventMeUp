@@ -10,7 +10,7 @@ import {
 } from '../shared/local-storage-helper';
 
 type EventWithEditToken = { event: EventDto; editToken: string };
-type EventWithSignupAndEditToken = {
+type SignupWithEventAndEditToken = {
   event: EventDto;
   signup: SignupDto;
   editToken: string;
@@ -23,7 +23,7 @@ type EventWithSignupAndEditToken = {
 })
 export class EventsComponent {
   myEvents$: Observable<Array<EventWithEditToken>>;
-  mySignups$: Observable<Array<EventWithSignupAndEditToken>>;
+  mySignups$: Observable<Array<SignupWithEventAndEditToken>>;
 
   constructor(readonly eventsService: EventsService) {
     this.myEvents$ = this.getMyEvents(LocalStorageHelper.myEventIds);
@@ -52,7 +52,7 @@ export class EventsComponent {
 
   private getMySignups(
     signupIds: Array<EventAndSignupIdWithEditToken>
-  ): Observable<Array<EventWithSignupAndEditToken>> {
+  ): Observable<Array<SignupWithEventAndEditToken>> {
     const idsOnly = signupIds.map((signupIds) => signupIds.eventId);
     return this.eventsService.eventsGetEventsByIds({ body: idsOnly }).pipe(
       map((events) => events.filter((event) => idsOnly.includes(event.id!))),

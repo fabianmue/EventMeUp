@@ -3,4 +3,18 @@
   height: calc(100vh - var(--header-height) - 2 * #{$padding});
   background-color: grey;
   padding: $padding;
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: 5px;
+
+    .action {
+      border-radius: 4px;
+
+      &.active {
+        color: crimson;
+      }
+    }
+  }
 }

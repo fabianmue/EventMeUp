@@ -1,5 +1,33 @@
 <div class="event-container">
-  <button mat-button (click)="toggleEdit()">Toggle edit</button>
+  <div class="actions">
+    <button
+      *ngIf="editValue"
+      class="action"
+      mat-icon-button
+      (click)="deleteEvent()"
+      matTooltip="Delete event"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button
+      *ngIf="editValue"
+      class="action"
+      mat-icon-button
+      (click)="clearEventEditToken()"
+      matTooltip="Clear event edit token"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+    <button
+      class="action"
+      mat-icon-button
+      (click)="toggleEdit()"
+      [class.active]="editValue"
+      matTooltip="Toggle event editing"
+    >
+      <mat-icon>edit</mat-icon>
+    </button>
+  </div>
   <app-event-form
     *ngIf="event$ | async as event; else noEvent"
     [event]="event"
@@ -7,6 +35,6 @@
   >
   </app-event-form>
   <ng-template #noEvent>
-    <div>Error</div>
+    <mat-card>Event not found.</mat-card>
   </ng-template>
 </div>
