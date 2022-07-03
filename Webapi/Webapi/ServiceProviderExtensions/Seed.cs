@@ -23,7 +23,8 @@ public static partial class ServiceProviderExtensions
     List<Event> events = eventCreateDtos
       .Select((eventCreateDto, index) => new Event(eventCreateDto)
       {
-        Id = index.ToString()
+        Id = index.ToString(),
+        EditToken = index.ToString()
       })
       .ToList();
     eventRepository.AddRange(events);
@@ -37,12 +38,18 @@ public static partial class ServiceProviderExtensions
     List<Event> createdEvents
   )
   {
-    createdEvents.ForEach(ev =>
+    int eventIndex = 0;
+    createdEvents.ForEach((ev) =>
     {
       IEnumerable<Signup> signups = signupCreateDtos
-        .Select(signUpCreateDto => new Signup(signUpCreateDto));
+        .Select((signUpCreateDto, signupIndex) => new Signup(signUpCreateDto)
+        {
+          Id = (eventIndex + (signupIndex * createdEvents.Count)).ToString(),
+          EditToken = (eventIndex + (signupIndex * createdEvents.Count)).ToString()
+        });
       ev.Signups.AddRange(signups);
       eventRepository.Update(ev);
+      eventIndex++;
     });
     eventRepository.SaveChanges();
   }
@@ -70,7 +77,7 @@ public static partial class ServiceProviderExtensions
   {
     new EventCreateDto
     {
-      CreatedBy = "Mambo",
+      CreatedBy = "Lou",
       Title = "Squash - blood sweat and tears (of joy!)",
       Description = "It's all fun and games until...",
       Start = new DateTime(2022, 5, 24, 12, 0, 0).ToUniversalTime(),
@@ -79,7 +86,7 @@ public static partial class ServiceProviderExtensions
     },
     new EventCreateDto
     {
-      CreatedBy = "Mambo",
+      CreatedBy = "Lou",
       Title = "Squash - the sweet squashvenge",
       Description = "Fool me once, shame on me. Fool me twice, shame on - wait, what?",
       Start = new DateTime(2022, 5, 31, 18, 30, 0).ToUniversalTime(),
@@ -88,17 +95,17 @@ public static partial class ServiceProviderExtensions
     },
     new EventCreateDto
     {
-      CreatedBy = "Mambo",
+      CreatedBy = "Lou",
       Title = "Signature gathering",
       Description = "Everything for the dachshund, everything for the club.",
       Start = new DateTime(2022, 08, 06, 11, 30, 0).ToUniversalTime(),
       End = new DateTime(2022, 08, 06, 13, 00, 0).ToUniversalTime(),
-      Category = EventCategory.Political,
+      Category = EventCategory.Politics,
       Location = "Bahnhofsstrasse, Zürich"
     },
     new EventCreateDto
     {
-      CreatedBy = "Mambo",
+      CreatedBy = "Lou",
       Title = "THE Party",
       Description = "Not just any party - THE party!",
       Start = new DateTime(2022, 08, 06, 19, 30, 0).ToUniversalTime(),
@@ -108,7 +115,7 @@ public static partial class ServiceProviderExtensions
     },
     new EventCreateDto
     {
-      CreatedBy = "Mambo",
+      CreatedBy = "Lou",
       Title = "New years eve",
       Description = "This gon' be gud",
       Start = new DateTime(2022, 12, 31, 22, 0, 0).ToUniversalTime(),
@@ -120,6 +127,11 @@ public static partial class ServiceProviderExtensions
 
   private static readonly List<SignupCreateDto> SignupCreateDtos = new()
   {
+    new SignupCreateDto
+    {
+      CreatedBy = "Lou",
+      Status = SignupStatus.Accepted
+    },
     new SignupCreateDto
     {
       CreatedBy = "Monica",

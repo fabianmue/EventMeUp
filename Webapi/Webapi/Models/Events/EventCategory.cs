@@ -7,6 +7,6 @@ public enum EventCategory
   Music,
   Food,
   Fashion,
-  Political,
+  Politics,
   Corporate
 }
