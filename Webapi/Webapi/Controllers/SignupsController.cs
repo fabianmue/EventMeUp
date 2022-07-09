@@ -22,9 +22,9 @@ public class SignupsController : ControllerBase
     ISignupService signupService,
     IMapper mapper)
   {
-    this._signupRepository = signupRepository;
-    this._signupService = signupService;
-    this._mapper = mapper;
+    _signupRepository = signupRepository;
+    _signupService = signupService;
+    _mapper = mapper;
   }
 
   [HttpPost]
@@ -35,16 +35,16 @@ public class SignupsController : ControllerBase
     [FromRoute] string eventId,
     [FromBody] SignupCreateDto signupCreateDto)
   {
-    Signup? signup = await this._signupService
+    Signup? signup = await _signupService
       .AddSignupAsync(eventId, signupCreateDto);
     if (signup == null)
     {
-      return this.NotFound();
+      return NotFound();
     }
 
-    return this.Created(
+    return Created(
       $"Events/{eventId}/Signups/{signup.Id}",
-      (this._mapper.Map<SignupDto>(signup), signup.EditToken)
+      (_mapper.Map<SignupDto>(signup), signup.EditToken)
     );
   }
 
@@ -59,22 +59,22 @@ public class SignupsController : ControllerBase
     [FromQuery] string editToken,
     [FromBody] SignupUpdateDto signupUpdateDto)
   {
-    Signup? signup = await this._signupRepository
+    Signup? signup = await _signupRepository
       .FindAsync(signup => signup.Id == signupId);
     if (signup == null)
     {
-      return this.NotFound();
+      return NotFound();
     }
 
     if (signup.EditToken != editToken)
     {
-      return this.Unauthorized();
+      return Unauthorized();
     }
 
     signup.Update(signupUpdateDto);
-    this._signupRepository.Update(signup);
-    await this._signupRepository.SaveChangesAsync();
-    return this.Ok(this._mapper.Map<SignupDto>(signup));
+    _signupRepository.Update(signup);
+    await _signupRepository.SaveChangesAsync();
+    return Ok(_mapper.Map<SignupDto>(signup));
   }
 
   [HttpDelete("{signupId}")]
@@ -86,20 +86,20 @@ public class SignupsController : ControllerBase
     [FromRoute] string signupId,
     [FromQuery] string editToken)
   {
-    Signup? signup = await this._signupRepository
+    Signup? signup = await _signupRepository
       .FindAsync(signup => signup.Id == signupId);
     if (signup == null)
     {
-      return this.NotFound();
+      return NotFound();
     }
 
     if (signup.EditToken != editToken)
     {
-      return this.Unauthorized();
+      return Unauthorized();
     }
 
-    this._signupRepository.Delete(signup);
-    await this._signupRepository.SaveChangesAsync();
-    return this.Ok();
+    _signupRepository.Delete(signup);
+    await _signupRepository.SaveChangesAsync();
+    return Ok();
   }
 }

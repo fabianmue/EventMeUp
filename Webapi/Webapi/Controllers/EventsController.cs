@@ -18,8 +18,8 @@ public class EventsController : ControllerBase
     IEventRepository eventRepository,
     IMapper mapper)
   {
-    this._eventRepository = eventRepository;
-    this._mapper = mapper;
+    _eventRepository = eventRepository;
+    _mapper = mapper;
   }
 
   [HttpGet("{eventId}")]
@@ -29,14 +29,14 @@ public class EventsController : ControllerBase
   public async Task<ActionResult<EventDto>> GetEventById(
     [FromRoute] string eventId)
   {
-    Event? ev = await this._eventRepository
+    Event? ev = await _eventRepository
       .FindAsync(ev => ev.Id == eventId);
     if (ev == null)
     {
-      return this.NotFound();
+      return NotFound();
     }
 
-    return this.Ok(this._mapper.Map<EventDto>(ev));
+    return Ok(_mapper.Map<EventDto>(ev));
   }
 
   [HttpPost("ids")]
@@ -46,9 +46,9 @@ public class EventsController : ControllerBase
   public ActionResult<List<EventDto>> GetEventsByIds(
     [FromBody] IEnumerable<string> eventIds)
   {
-    IEnumerable<Event> events = this._eventRepository
+    IEnumerable<Event> events = _eventRepository
       .FindAll(ev => eventIds.Contains(ev.Id));
-    return this.Ok(this._mapper.Map<IEnumerable<EventDto>>(events));
+    return Ok(_mapper.Map<IEnumerable<EventDto>>(events));
   }
 
   [HttpPost]
@@ -59,11 +59,11 @@ public class EventsController : ControllerBase
     [FromBody] EventCreateDto eventCreateDto)
   {
     var ev = new Event(eventCreateDto);
-    this._eventRepository.Add(ev);
-    await this._eventRepository.SaveChangesAsync();
-    return this.Created(
+    _eventRepository.Add(ev);
+    await _eventRepository.SaveChangesAsync();
+    return Created(
       $"Events/{ev.Id}",
-      (this._mapper.Map<EventDto>(ev), ev.EditToken)
+      (_mapper.Map<EventDto>(ev), ev.EditToken)
     );
   }
 
@@ -78,22 +78,22 @@ public class EventsController : ControllerBase
     [FromQuery] string editToken,
     [FromBody] EventUpdateDto eventUpdateDto)
   {
-    Event? ev = await this._eventRepository
+    Event? ev = await _eventRepository
       .FindAsync(ev => ev.Id == eventId);
     if (ev == null)
     {
-      return this.NotFound();
+      return NotFound();
     }
 
     if (ev.EditToken != editToken)
     {
-      return this.Unauthorized();
+      return Unauthorized();
     }
 
     ev.Update(eventUpdateDto);
-    this._eventRepository.Update(ev);
-    await this._eventRepository.SaveChangesAsync();
-    return this.Ok(this._mapper.Map<EventDto>(ev));
+    _eventRepository.Update(ev);
+    await _eventRepository.SaveChangesAsync();
+    return Ok(_mapper.Map<EventDto>(ev));
   }
 
   [HttpDelete("{eventId}")]
@@ -105,20 +105,20 @@ public class EventsController : ControllerBase
     [FromRoute] string eventId,
     [FromQuery] string editToken)
   {
-    Event? ev = await this._eventRepository
+    Event? ev = await _eventRepository
       .FindAsync(ev => ev.Id == eventId);
     if (ev == null)
     {
-      return this.NotFound();
+      return NotFound();
     }
 
     if (ev.EditToken != editToken)
     {
-      return this.Unauthorized();
+      return Unauthorized();
     }
 
-    this._eventRepository.Delete(ev);
-    await this._eventRepository.SaveChangesAsync();
-    return this.Ok();
+    _eventRepository.Delete(ev);
+    await _eventRepository.SaveChangesAsync();
+    return Ok();
   }
 }

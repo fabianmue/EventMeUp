@@ -12,7 +12,7 @@ public class EditableEntity : BaseEntity
 
   public EditableEntity() : base()
   {
-    this.CreatedBy = string.Empty;
-    this.EditToken = ShortId.Generate(ShortIdOptions);
+    CreatedBy = string.Empty;
+    EditToken = ShortId.Generate(ShortIdOptions);
   }
 }

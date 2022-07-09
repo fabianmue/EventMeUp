@@ -10,18 +10,18 @@ public class Signup : EditableEntity
 
   public Signup() : base()
   {
-    this.Comments = new List<Comment>();
+    Comments = new List<Comment>();
   }
 
   public Signup(SignupCreateDto signupCreateDto) : base()
   {
-    this.CreatedBy = signupCreateDto.CreatedBy;
-    this.Status = signupCreateDto.Status;
-    this.Comments = new List<Comment>();
+    CreatedBy = signupCreateDto.CreatedBy;
+    Status = signupCreateDto.Status;
+    Comments = new List<Comment>();
   }
 
   public void Update(SignupUpdateDto signupUpdateDto)
   {
-    this.Status = signupUpdateDto.Status;
+    Status = signupUpdateDto.Status;
   }
 }

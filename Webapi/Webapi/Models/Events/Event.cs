@@ -20,29 +20,29 @@ public class Event : EditableEntity
 
   public Event() : base()
   {
-    this.Title = string.Empty;
-    this.Signups = new List<Signup>();
+    Title = string.Empty;
+    Signups = new List<Signup>();
   }
 
   public Event(EventCreateDto eventCreateDto) : base()
   {
-    this.CreatedBy = eventCreateDto.CreatedBy;
-    this.Title = eventCreateDto.Title;
-    this.Description = eventCreateDto.Description;
-    this.Start = eventCreateDto.Start;
-    this.End = eventCreateDto.End;
-    this.Category = eventCreateDto.Category;
-    this.Location = eventCreateDto.Location;
-    this.Signups = new List<Signup>();
+    CreatedBy = eventCreateDto.CreatedBy;
+    Title = eventCreateDto.Title;
+    Description = eventCreateDto.Description;
+    Start = eventCreateDto.Start;
+    End = eventCreateDto.End;
+    Category = eventCreateDto.Category;
+    Location = eventCreateDto.Location;
+    Signups = new List<Signup>();
   }
 
   public void Update(EventUpdateDto eventUpdateDto)
   {
-    this.Title = eventUpdateDto.Title;
-    this.Description = eventUpdateDto.Description;
-    this.Start = eventUpdateDto.Start;
-    this.End = eventUpdateDto.End;
-    this.Category = eventUpdateDto.Category;
-    this.Location = eventUpdateDto.Location;
+    Title = eventUpdateDto.Title;
+    Description = eventUpdateDto.Description;
+    Start = eventUpdateDto.Start;
+    End = eventUpdateDto.End;
+    Category = eventUpdateDto.Category;
+    Location = eventUpdateDto.Location;
   }
 }

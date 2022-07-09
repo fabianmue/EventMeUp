@@ -13,7 +13,7 @@ public class EventRepository : EntityRepository<Event>, IEventRepository
 
   public override Event? Find(Expression<Func<Event, bool>> expression)
   {
-    return this._dbSet
+    return _dbSet
       .Include(ev => ev.Signups)
       .ThenInclude(signup => signup.Comments)
       .SingleOrDefault(expression);
@@ -21,7 +21,7 @@ public class EventRepository : EntityRepository<Event>, IEventRepository
 
   public override async Task<Event?> FindAsync(Expression<Func<Event, bool>> expression)
   {
-    return await this._dbSet
+    return await _dbSet
       .Include(ev => ev.Signups)
       .ThenInclude(signup => signup.Comments)
       .SingleOrDefaultAsync(expression);

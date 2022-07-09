@@ -13,52 +13,52 @@ public class EntityRepository<T> : IEntityRepository<T> where T : BaseEntity
 
   public EntityRepository(WebapiContext context)
   {
-    this._context = context;
-    this._dbSet = this._context.Set<T>();
+    _context = context;
+    _dbSet = _context.Set<T>();
   }
 
   public virtual T? Find(Expression<Func<T, bool>> expression)
   {
-    return this._dbSet.SingleOrDefault(expression);
+    return _dbSet.SingleOrDefault(expression);
   }
 
   public virtual IQueryable<T> FindAll(Expression<Func<T, bool>> expression)
   {
-    return this._dbSet.Where(expression);
+    return _dbSet.Where(expression);
   }
 
   public virtual async Task<T?> FindAsync(Expression<Func<T, bool>> expression)
   {
-    return await this._dbSet.SingleOrDefaultAsync(expression);
+    return await _dbSet.SingleOrDefaultAsync(expression);
   }
 
   public void Add(T entity)
   {
-    this._dbSet.Add(entity);
+    _dbSet.Add(entity);
   }
 
   public void AddRange(IEnumerable<T> entities)
   {
-    this._dbSet.AddRange(entities);
+    _dbSet.AddRange(entities);
   }
 
   public void Update(T entity)
   {
-    this._dbSet.Update(entity);
+    _dbSet.Update(entity);
   }
 
   public void Delete(T entity)
   {
-    this._dbSet.Remove(entity);
+    _dbSet.Remove(entity);
   }
 
   public int SaveChanges()
   {
-    return this._context.SaveChanges();
+    return _context.SaveChanges();
   }
 
   public async Task<int> SaveChangesAsync()
   {
-    return await this._context.SaveChangesAsync();
+    return await _context.SaveChangesAsync();
   }
 }

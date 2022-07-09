@@ -15,7 +15,7 @@ public class BaseEntity
 
   public BaseEntity()
   {
-    this.Id = ShortId.Generate(ShortIdOptions);
+    Id = ShortId.Generate(ShortIdOptions);
   }
 
   protected static readonly GenerationOptions ShortIdOptions =

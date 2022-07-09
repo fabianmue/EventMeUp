@@ -15,13 +15,13 @@ public class SignupService : ISignupService
   public SignupService(IEventRepository eventRepository,
     ISignupRepository signupRepository)
   {
-    this._eventRepository = eventRepository;
-    this._signupRepository = signupRepository;
+    _eventRepository = eventRepository;
+    _signupRepository = signupRepository;
   }
 
   public async Task<Signup?> AddSignupAsync(string eventId, SignupCreateDto signupCreateDto)
   {
-    Event? ev = this._eventRepository
+    Event? ev = _eventRepository
       .Find(ev => ev.Id == eventId);
     if (ev == null)
     {
@@ -30,14 +30,14 @@ public class SignupService : ISignupService
 
     var signup = new Signup(signupCreateDto);
     ev.Signups.Add(signup);
-    this._eventRepository.Update(ev);
-    await this._eventRepository.SaveChangesAsync();
+    _eventRepository.Update(ev);
+    await _eventRepository.SaveChangesAsync();
     return signup;
   }
 
   public async Task<Comment?> AddCommentAsync(string signupId, CommentCreateDto commentCreateDto)
   {
-    Signup? signup = this._signupRepository
+    Signup? signup = _signupRepository
       .Find(signup => signup.Id == signupId);
     if (signup == null)
     {
@@ -46,8 +46,8 @@ public class SignupService : ISignupService
 
     var comment = new Comment(commentCreateDto);
     signup.Comments.Add(comment);
-    this._signupRepository.Update(signup);
-    await this._signupRepository.SaveChangesAsync();
+    _signupRepository.Update(signup);
+    await _signupRepository.SaveChangesAsync();
     return comment;
   }
 }

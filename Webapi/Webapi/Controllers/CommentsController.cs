@@ -27,10 +27,10 @@ public class CommentsController : ControllerBase
     ISignupService signupService,
     IMapper mapper)
   {
-    this._signupRepository = signupRepository;
-    this._commentRepository = commentRepository;
-    this._signupService = signupService;
-    this._mapper = mapper;
+    _signupRepository = signupRepository;
+    _commentRepository = commentRepository;
+    _signupService = signupService;
+    _mapper = mapper;
   }
 
   [HttpPost]
@@ -42,16 +42,16 @@ public class CommentsController : ControllerBase
     [FromRoute] string signupId,
     [FromBody] CommentCreateDto commentCreateDto)
   {
-    Comment? comment = await this._signupService
+    Comment? comment = await _signupService
       .AddCommentAsync(signupId, commentCreateDto);
     if (comment == null)
     {
-      return this.NotFound();
+      return NotFound();
     }
 
-    return this.Created(
+    return Created(
       $"Events/{eventId}/Signups/{signupId}/Comments/{comment.Id}",
-      this._mapper.Map<CommentDto>(comment)
+      _mapper.Map<CommentDto>(comment)
     );
   }
 
@@ -67,29 +67,29 @@ public class CommentsController : ControllerBase
     [FromQuery] string editToken,
     [FromBody] CommentUpdateDto commentUpdateDto)
   {
-    Signup? signup = await this._signupRepository
+    Signup? signup = await _signupRepository
       .FindAsync(signup => signup.Id == signupId);
     if (signup == null)
     {
-      return this.NotFound();
+      return NotFound();
     }
 
     if (signup.EditToken != editToken)
     {
-      return this.Unauthorized();
+      return Unauthorized();
     }
 
     Comment? comment = signup.Comments
       .Find(comment => comment.Id == commentId);
     if (comment == null)
     {
-      return this.NotFound();
+      return NotFound();
     }
 
     comment.Update(commentUpdateDto);
-    this._commentRepository.Update(comment);
-    await this._commentRepository.SaveChangesAsync();
-    return this.Ok(this._mapper.Map<CommentDto>(comment));
+    _commentRepository.Update(comment);
+    await _commentRepository.SaveChangesAsync();
+    return Ok(_mapper.Map<CommentDto>(comment));
   }
 
   [HttpDelete("{commentId}")]
@@ -102,27 +102,27 @@ public class CommentsController : ControllerBase
     [FromRoute] string commentId,
     [FromQuery] string editToken)
   {
-    Signup? signup = await this._signupRepository
+    Signup? signup = await _signupRepository
       .FindAsync(signup => signup.Id == signupId);
     if (signup == null)
     {
-      return this.NotFound();
+      return NotFound();
     }
 
     if (signup.EditToken != editToken)
     {
-      return this.Unauthorized();
+      return Unauthorized();
     }
 
     Comment? comment = signup.Comments
       .Find(comment => comment.Id == commentId);
     if (comment == null)
     {
-      return this.NotFound();
+      return NotFound();
     }
 
-    this._commentRepository.Delete(comment);
-    await this._commentRepository.SaveChangesAsync();
-    return this.Ok();
+    _commentRepository.Delete(comment);
+    await _commentRepository.SaveChangesAsync();
+    return Ok();
   }
 }

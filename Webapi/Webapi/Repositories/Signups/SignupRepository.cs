@@ -13,14 +13,14 @@ public class SignupRepository : EntityRepository<Signup>, ISignupRepository
 
   public override Signup? Find(Expression<Func<Signup, bool>> expression)
   {
-    return this._dbSet
+    return _dbSet
       .Include(signup => signup.Comments)
       .SingleOrDefault(expression);
   }
 
   public override async Task<Signup?> FindAsync(Expression<Func<Signup, bool>> expression)
   {
-    return await this._dbSet
+    return await _dbSet
       .Include(signup => signup.Comments)
       .SingleOrDefaultAsync(expression);
   }

@@ -8,19 +8,19 @@ public class Comment : BaseEntity
 
   public Comment() : base()
   {
-    this.Text = string.Empty;
-    this.Edited = false;
+    Text = string.Empty;
+    Edited = false;
   }
 
   public Comment(CommentCreateDto commentCreateDto) : base()
   {
-    this.Text = commentCreateDto.Text;
-    this.Edited = false;
+    Text = commentCreateDto.Text;
+    Edited = false;
   }
 
   public void Update(CommentUpdateDto commentUpdateDto)
   {
-    this.Text = commentUpdateDto.Text;
-    this.Edited = true;
+    Text = commentUpdateDto.Text;
+    Edited = true;
   }
 }
