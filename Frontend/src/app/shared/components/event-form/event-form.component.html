@@ -1,5 +1,60 @@
-<mat-card>
-  <form [formGroup]="eventForm" (submit)="submitForm()"></form>
-  <div>event title: {{ event?.title }}</div>
-  <div>eventForm.enabled: {{ eventForm.enabled }}</div>
+<mat-card class="event-form-container">
+  <img
+    src="assets/event-banners/{{
+      eventForm.get('category')?.value ?? 'EventMeUp'
+    }}.png"
+    class="banner"
+  />
+  <form [formGroup]="eventForm" (submit)="submitForm()" class="form">
+    <mat-form-field floatLabel="always" class="title-field">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" />
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        formControlName="description"
+        rows="5"
+        class="description"
+      >
+      </textarea>
+    </mat-form-field>
+    <mat-form-field class="start-field" floatLabel="always">
+      <mat-label>Start</mat-label>
+      <input matInput [matDatepicker]="startPicker" formControlName="start" />
+      <mat-hint>DD.MM.YYYY</mat-hint>
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="startPicker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #startPicker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field class="end-field" floatLabel="always">
+      <mat-label>End</mat-label>
+      <input matInput [matDatepicker]="endPicker" formControlName="end" />
+      <mat-hint>DD.MM.YYYY</mat-hint>
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="endPicker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #endPicker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field floatLabel="always">
+      <mat-label>Location</mat-label>
+      <textarea matInput formControlName="location" rows="3" class="location">
+      </textarea>
+    </mat-form-field>
+    <mat-form-field class="category-field" floatLabel="always">
+      <mat-label>Category</mat-label>
+      <mat-select formControlName="category">
+        <mat-option
+          *ngFor="let category of categories"
+          [value]="category.value"
+        >
+          {{ category.viewValue }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
 </mat-card>

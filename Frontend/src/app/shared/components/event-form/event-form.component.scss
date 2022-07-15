@@ -1,0 +1,71 @@
+.event-form-container {
+  .banner {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    row-gap: 10px;
+
+    .mat-form-field {
+      flex: 1 1 auto;
+
+      .mat-form-field-label {
+        color: currentColor;
+      }
+
+      .mat-select-value {
+        color: currentColor;
+      }
+    }
+
+    .title-field {
+      font-size: var(--font-size-medium);
+      font-weight: bold;
+
+      .mat-form-field-label {
+        font-weight: normal;
+        font-size: var(--font-size-small);
+      }
+    }
+
+    .description,
+    .location {
+      resize: none;
+    }
+
+    .start-field,
+    .end-field,
+    .category-field {
+      min-width: 250px;
+      width: 50%;
+    }
+
+    .mat-form-field.mat-form-field-disabled {
+      .mat-form-field-underline {
+        height: 0;
+      }
+
+      .mat-input-element:disabled {
+        color: currentColor;
+      }
+
+      .mat-hint {
+        display: none;
+      }
+
+      .mat-form-field-suffix .mat-datepicker-toggle {
+        display: none;
+      }
+
+      .mat-select-arrow-wrapper {
+        display: none;
+      }
+    }
+  }
+}

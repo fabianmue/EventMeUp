@@ -1,39 +1,54 @@
 <div class="event-container">
-  <div class="actions">
-    <button
-      *ngIf="editValue"
-      class="action"
-      mat-icon-button
-      (click)="deleteEvent()"
-      matTooltip="Delete event"
+  <div *ngIf="event$ | async as event; else noEvent">
+    <div class="actions">
+      <button
+        *ngIf="editValue"
+        class="action"
+        mat-icon-button
+        (click)="deleteEvent(event)"
+        matTooltip="Delete event"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button
+        *ngIf="editValue"
+        class="action"
+        mat-icon-button
+        (click)="cancelEdit()"
+        matTooltip="Cancel editing"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+      <button
+        class="action"
+        mat-icon-button
+        *ngIf="!editValue; else submit"
+        (click)="enableEdit()"
+        [class.active]="editValue"
+        matTooltip="Toggle editing"
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+      <ng-template #submit>
+        <button
+          class="action"
+          mat-icon-button
+          [disabled]="!eventFormValid"
+          (click)="disableEdit()"
+          matTooltip="Submit event"
+        >
+          <mat-icon>done</mat-icon>
+        </button>
+      </ng-template>
+    </div>
+    <app-event-form
+      [event]="event"
+      [edit]="(edit$ | async) ?? false"
+      (submit)="submitEvent(event.id!, $event)"
+      (valid)="eventFormValid = $event"
     >
-      <mat-icon>delete</mat-icon>
-    </button>
-    <button
-      *ngIf="editValue"
-      class="action"
-      mat-icon-button
-      (click)="clearEventEditToken()"
-      matTooltip="Clear event edit token"
-    >
-      <mat-icon>close</mat-icon>
-    </button>
-    <button
-      class="action"
-      mat-icon-button
-      (click)="toggleEdit()"
-      [class.active]="editValue"
-      matTooltip="Toggle event editing"
-    >
-      <mat-icon>edit</mat-icon>
-    </button>
+    </app-event-form>
   </div>
-  <app-event-form
-    *ngIf="event$ | async as event; else noEvent"
-    [event]="event"
-    [edit]="(edit$ | async) ?? false"
-  >
-  </app-event-form>
   <ng-template #noEvent>
     <mat-card>Event not found.</mat-card>
   </ng-template>

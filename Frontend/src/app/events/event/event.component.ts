@@ -7,11 +7,12 @@ import {
   map,
   Observable,
   of,
+  Subject,
   switchMap,
   tap,
 } from 'rxjs';
 
-import { EventDto } from '../../shared/api/models';
+import { EventDto, EventUpdateDto } from '../../shared/api/models';
 import { EventsService } from '../../shared/api/services';
 import { EnterEditTokenDialog } from '../enter-edit-token-dialog/enter-edit-token-dialog';
 
@@ -20,10 +21,12 @@ import { EnterEditTokenDialog } from '../enter-edit-token-dialog/enter-edit-toke
   styleUrls: ['./event.component.scss'],
 })
 export class EventComponent implements OnInit {
-  event$: Observable<EventDto | null>;
+  event$ = new Subject<EventDto | null>();
   eventEditToken: string | null = null;
   signupEditToken: string | null = null;
+  eventFormValid: boolean = false;
   private edit = new BehaviorSubject<boolean>(false);
+  private eventId: string | null = null;
 
   constructor(
     private readonly dialog: MatDialog,
@@ -31,14 +34,12 @@ export class EventComponent implements OnInit {
     private readonly router: Router,
     readonly eventsService: EventsService
   ) {
-    this.event$ = this.route.paramMap.pipe(
-      map((paramMap) => paramMap.get('id')),
-      switchMap((eventId) =>
-        eventId === null
-          ? of(null)
-          : eventsService.eventsGetEventById({ eventId })
+    this.route.paramMap
+      .pipe(
+        tap((paramMap) => (this.eventId = paramMap.get('id'))),
+        switchMap(() => this.loadEvent())
       )
-    );
+      .subscribe();
   }
 
   ngOnInit(): void {
@@ -62,12 +63,7 @@ export class EventComponent implements OnInit {
     return this.edit.value;
   }
 
-  toggleEdit(): void {
-    if (this.editValue) {
-      this.edit.next(false);
-      return;
-    }
-
+  enableEdit(): void {
     if (this.eventEditToken !== null) {
       this.edit.next(true);
       return;
@@ -81,16 +77,43 @@ export class EventComponent implements OnInit {
     });
   }
 
-  deleteEvent(): void {
-    console.log('ToDo: implement delete');
+  disableEdit(): void {
+    this.edit.next(false);
   }
 
-  clearEventEditToken(): void {
-    this.eventEditToken = null;
+  submitEvent(eventId: string, eventUpdateDto: EventUpdateDto): void {
+    this.eventsService
+      .eventsUpdateEvent({
+        eventId: eventId,
+        body: eventUpdateDto,
+        editToken: this.eventEditToken!,
+      })
+      .subscribe();
+  }
+
+  deleteEvent(event: EventDto): void {
+    this.eventsService
+      .eventsDeleteEvent({
+        eventId: event.id!,
+        editToken: this.eventEditToken!,
+      })
+      .subscribe(() => this.router.navigate(['events']));
+  }
+
+  cancelEdit(): void {
     this.edit.next(false);
+    this.loadEvent().subscribe();
   }
 
   private openDialog(): Observable<any> {
     return this.dialog.open(EnterEditTokenDialog).afterClosed();
+  }
+
+  private loadEvent(): Observable<EventDto | null> {
+    return this.eventId === null
+      ? of(null)
+      : this.eventsService
+          .eventsGetEventById({ eventId: this.eventId })
+          .pipe(tap((event) => this.event$.next(event)));
   }
 }
